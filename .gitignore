@@ -1,0 +1,7 @@
+*.db
+*.db-wal
+*.db-shm
+uploads/
+.secret_key
+__pycache__/
+venv/
