@@ -54,7 +54,11 @@ const STRINGS = {
     signin_h: 'Authority sign-in', signin_note: 'For municipal staff only.',
     lbl_user: 'Username', lbl_pass: 'Password', signin_btn: 'Sign in',
     no_photo: 'No photo', support: 'support',
-    cat_power: 'Power outage', cat_bribe: 'Bribery / corruption', cat_health: 'Poor healthcare service', cat_absent: 'Absent official / service',
+    cat_sewage: 'Sewage overflow', cat_drain: 'Blocked drain', cat_manhole: 'Manhole / open manhole',
+    cat_dirty: 'Dirty water supply', cat_leak: 'Water leakage', cat_water: 'Waterlogging',
+    cat_road: 'Pothole / road damage', cat_garbage: 'Garbage collection', cat_light: 'Streetlight not working',
+    cat_footpath: 'Footpath damage', cat_power: 'Power outage', cat_bribe: 'Bribery / corruption',
+    cat_health: 'Poor healthcare service', cat_absent: 'Absent official / service', cat_others: 'Others',
   },
   hi: {
     nav_home: 'होम', nav_report: 'समस्या दर्ज करें', nav_track: 'ट्रैक करें', nav_map: 'सार्वजनिक नक्शा', nav_admin: 'प्राधिकरण डैशबोर्ड',
@@ -99,7 +103,11 @@ const STRINGS = {
     signin_h: 'प्राधिकरण साइन-इन', signin_note: 'केवल नगर निगम कर्मचारियों के लिए।',
     lbl_user: 'उपयोगकर्ता नाम', lbl_pass: 'पासवर्ड', signin_btn: 'साइन इन',
     no_photo: 'कोई फोटो नहीं', support: 'समर्थन',
-    cat_power: 'बिजली कटौती', cat_bribe: 'रिश्वत / भ्रष्टाचार', cat_health: 'खराब स्वास्थ्य सेवा', cat_absent: 'अनुपस्थित अधिकारी / सेवा',
+    cat_sewage: 'सीवरेज ओवरफ्लो', cat_drain: 'बंद नाली', cat_manhole: 'मैनहोल / खुला मैनहोल',
+    cat_dirty: 'गंदा पानी आपूर्ति', cat_leak: 'पानी का रिसाव', cat_water: 'जलभराव',
+    cat_road: 'गड्ढा / सड़क क्षति', cat_garbage: 'कचरा संग्रह', cat_light: 'स्ट्रीटलाइट खराब',
+    cat_footpath: 'फुटपाथ क्षति', cat_power: 'बिजली कटौती', cat_bribe: 'रिश्वत / भ्रष्टाचार',
+    cat_health: 'खराब स्वास्थ्य सेवा', cat_absent: 'अनुपस्थित अधिकारी / सेवा', cat_others: 'अन्य',
   },
 };
 
@@ -236,6 +244,9 @@ const overdue  = c => open(c) && (Date.now() - c.created) / day > slaDays(c);
 const plabel   = c => { const p = priority(c); return p >= 14 ? "High" : p >= 9 ? "Medium" : "Low"; };
 const dist     = (a, b) => { const dx = (a.lat - b.lat) * 111e3, dy = (a.lng - b.lng) * 102e3; return Math.hypot(dx, dy); };
 
+const catKey = { 'Sewage overflow':'cat_sewage','Blocked drain':'cat_drain','Manhole / open manhole':'cat_manhole','Dirty water supply':'cat_dirty','Water leakage':'cat_leak','Waterlogging':'cat_water','Pothole / road damage':'cat_road','Garbage collection':'cat_garbage','Streetlight not working':'cat_light','Footpath damage':'cat_footpath','Power outage':'cat_power','Bribery / corruption':'cat_bribe','Poor healthcare service':'cat_health','Absent official / service':'cat_absent','Others':'cat_others' };
+const catLabel = c => t(catKey[c]) || c;
+
 /* ── Shared partials ───────────────────────────────────────── */
 
 function thumb(c) {
@@ -305,11 +316,7 @@ V.home = () => {
   </div>
   <div class="card" style="margin-bottom:22px">
     <h2 style="font-size:22px">${t('cats_h')}</h2>
-    <div class="cats">${Object.keys(CATS).map(c => {
-      const catLabels = { 'Power outage': t('cat_power'), 'Bribery / corruption': t('cat_bribe'), 'Poor healthcare service': t('cat_health'), 'Absent official / service': t('cat_absent') };
-      const label = catLabels[c] || c;
-      return `<button class="cat" onclick="window.PRE='${c}';location.hash='report'"><b>${E[c]}</b>${label}</button>`;
-    }).join("")}</div>
+    <div class="cats">${Object.keys(CATS).map(c => `<button class="cat" onclick="window.PRE='${c}';location.hash='report'"><b>${E[c]}</b>${catLabel(c)}</button>`).join("")}</div>
   </div>
   <div class="card">
     <h2 style="font-size:22px;margin-bottom:6px">${t('top_h')}</h2>
@@ -322,7 +329,7 @@ V.report = () => `<h2 style="font-size:28px;margin-bottom:14px">${t('report_h')}
   <div class="grid2">
     <form class="card" id="f" onsubmit="return false">
       <label for="cat">${t('lbl_cat')}</label>
-      <select id="cat">${Object.keys(CATS).map(c => `<option>${c}</option>`).join("")}</select>
+      <select id="cat">${Object.keys(CATS).map(c => `<option value="${c}">${catLabel(c)}</option>`).join("")}</select>
       <div id="oth" hidden>
         <label for="spec">${t('lbl_spec')}</label>
         <input id="spec" placeholder="${t('spec_ph')}">
