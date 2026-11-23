@@ -1,3 +1,110 @@
+/* ── Language ─────────────────────────────────────────────── */
+
+let LANG = localStorage.getItem('lang') || 'en';
+
+function toggleLang() {
+  LANG = LANG === 'en' ? 'hi' : 'en';
+  localStorage.setItem('lang', LANG);
+  const btn = document.getElementById('langbtn');
+  if (btn) btn.textContent = LANG === 'en' ? 'हिंदी' : 'English';
+  render();
+}
+
+const STRINGS = {
+  en: {
+    nav_home: 'Home', nav_report: 'Report a problem', nav_track: 'Track', nav_map: 'Public map', nav_admin: 'Authority dashboard',
+    hero_h1a: 'Report it.', hero_h1b: 'Track it.', hero_h1c: 'Fix it.',
+    hero_p: 'CitySaathi is your neighbourhood companion for civic problems. Report sewage, drainage, water and road issues with a photo and a location, then follow each complaint until it is fixed.',
+    hero_btn1: 'Report a problem', hero_btn2: 'See the public map',
+    stat1: 'Complaints registered', stat2: 'Open right now', stat3: 'Resolved',
+    step1_h: 'Report', step1_p: 'Pick the problem, add a photo and share the spot. Nearby duplicates are merged into one incident.',
+    step2_h: 'Track',  step2_p: 'Every complaint gets an ID and a visible timeline from reported to resolved.',
+    step3_h: 'Fix',    step3_p: 'Authorities assign teams, upload an after-photo and you confirm the fix.',
+    cats_h: 'What would you like to report?',
+    top_h: 'Most supported problems', no_open: 'No open complaints.',
+    foot: 'Complaints are saved on the CitySaathi server. Municipal routing needs an agreement with the local authority.',
+    report_h: 'Report a problem',
+    lbl_cat: 'What is the problem?', lbl_spec: 'Please specify the problem', spec_ph: 'e.g. Stray animals, illegal dumping',
+    lbl_desc: 'Describe it', desc_ph: 'What is happening and how long has it been going on?',
+    lbl_area: 'Area / ward', area_ph: 'e.g. Naranpura, Ward 12',
+    lbl_loc: 'Location', lat_ph: 'Latitude', lng_ph: 'Longitude',
+    gps_btn: 'Use my current location', gps_finding: 'Finding you…', gps_ok: 'Location captured.', gps_err: 'Could not get location. Enter it manually.', gps_na: 'Location is not available in this browser.',
+    lbl_photo: 'Photo', submit_btn: 'Submit complaint',
+    how_h: 'How it works',
+    how1: 'Pick the problem type and add a photo.', how2: 'Share the location so the right ward can find it.',
+    how3: 'We check for a nearby report of the same problem first, to avoid duplicates.', how4: 'You get a complaint ID to track progress.',
+    how_note: 'Complaints from the same spot are merged into one incident, with a support count that raises its priority.',
+    dup_notice: 'This may already be reported nearby. Supporting it is faster than a new complaint.',
+    support_btn: 'Support this',
+    val_err: 'Please add a description, area and location (latitude and longitude). If you chose Others, say what the problem is.',
+    reg_ok: 'Complaint registered. Your ID is', reg_note: 'Keep it to track progress.',
+    track_this: 'Track this complaint',
+    track_h: 'Track a complaint', track_ph: 'Enter complaint ID, e.g. CS-1001', find_btn: 'Find', not_found: 'No complaint found with that ID.',
+    history_h: 'History', before: 'Before', after_lbl: 'After',
+    fixed_q: 'Is it really fixed?', yes_confirm: 'Yes, confirm', no_reopen: 'No, reopen', citizen_confirmed: 'Citizen confirmed the fix.',
+    map_h: 'Public complaint map', no_complaints: 'No complaints yet.',
+    map_note: 'Schematic map of reported spots. Larger dots have more support. Red: in progress or assigned, yellow: newly reported, green: resolved. Click a dot to open it.',
+    gmaps: 'Open this area in Google Maps', gmaps_dot: 'Open in Google Maps',
+    all_complaints: 'All complaints',
+    admin_h: 'Authority dashboard', signed_as: 'Signed in as', signout: 'Sign out',
+    total: 'Total', pending: 'Pending', overdue_lbl: 'Overdue (escalated)',
+    all_cats: 'All categories', all_statuses: 'All statuses', filter_area: 'Filter by area', export_csv: 'Export CSV',
+    priority_lbl: 'Priority', after_photo: 'After photo', no_match: 'No complaints match.',
+    staff_foot: 'Staff sessions are managed by the server.',
+    signin_h: 'Authority sign-in', signin_note: 'For municipal staff only.',
+    lbl_user: 'Username', lbl_pass: 'Password', signin_btn: 'Sign in',
+    no_photo: 'No photo', support: 'support',
+    cat_power: 'Power outage', cat_bribe: 'Bribery / corruption', cat_health: 'Poor healthcare service', cat_absent: 'Absent official / service',
+  },
+  hi: {
+    nav_home: 'होम', nav_report: 'समस्या दर्ज करें', nav_track: 'ट्रैक करें', nav_map: 'सार्वजनिक नक्शा', nav_admin: 'प्राधिकरण डैशबोर्ड',
+    hero_h1a: 'दर्ज करें.', hero_h1b: 'ट्रैक करें.', hero_h1c: 'ठीक करें.',
+    hero_p: 'CitySaathi नागरिक समस्याओं के लिए आपका पड़ोस साथी है। सीवेज, जल निकासी, पानी और सड़क की समस्याओं को फोटो और स्थान के साथ दर्ज करें, फिर हर शिकायत को ठीक होने तक ट्रैक करें।',
+    hero_btn1: 'समस्या दर्ज करें', hero_btn2: 'सार्वजनिक नक्शा देखें',
+    stat1: 'दर्ज शिकायतें', stat2: 'अभी खुली', stat3: 'हल हुई',
+    step1_h: 'दर्ज करें', step1_p: 'समस्या चुनें, फोटो जोड़ें और स्थान साझा करें। पास की डुप्लीकेट शिकायतें एक में मिला दी जाती हैं।',
+    step2_h: 'ट्रैक करें', step2_p: 'हर शिकायत को एक ID और दर्ज से हल तक की टाइमलाइन मिलती है।',
+    step3_h: 'ठीक करें', step3_p: 'अधिकारी टीम नियुक्त करते हैं, बाद की फोटो अपलोड करते हैं और आप सुधार की पुष्टि करते हैं।',
+    cats_h: 'आप क्या दर्ज करना चाहते हैं?',
+    top_h: 'सबसे अधिक समर्थित समस्याएं', no_open: 'कोई खुली शिकायत नहीं।',
+    foot: 'शिकायतें CitySaathi सर्वर पर सहेजी जाती हैं। नगर निगम रूटिंग के लिए स्थानीय प्राधिकरण के साथ समझौते की आवश्यकता है।',
+    report_h: 'समस्या दर्ज करें',
+    lbl_cat: 'समस्या क्या है?', lbl_spec: 'कृपया समस्या स्पष्ट करें', spec_ph: 'जैसे आवारा जानवर, अवैध डंपिंग',
+    lbl_desc: 'विवरण दें', desc_ph: 'क्या हो रहा है और कब से हो रहा है?',
+    lbl_area: 'क्षेत्र / वार्ड', area_ph: 'जैसे नारणपुरा, वार्ड 12',
+    lbl_loc: 'स्थान', lat_ph: 'अक्षांश', lng_ph: 'देशांतर',
+    gps_btn: 'मेरा वर्तमान स्थान उपयोग करें', gps_finding: 'आपको ढूंढ रहे हैं…', gps_ok: 'स्थान प्राप्त हुआ।', gps_err: 'स्थान नहीं मिला। मैन्युअल दर्ज करें।', gps_na: 'इस ब्राउज़र में स्थान उपलब्ध नहीं है।',
+    lbl_photo: 'फोटो', submit_btn: 'शिकायत दर्ज करें',
+    how_h: 'यह कैसे काम करता है',
+    how1: 'समस्या का प्रकार चुनें और फोटो जोड़ें।', how2: 'स्थान साझा करें ताकि सही वार्ड इसे ढूंढ सके।',
+    how3: 'हम पहले पास की समान समस्या की जांच करते हैं, डुप्लीकेट से बचने के लिए।', how4: 'आपको प्रगति ट्रैक करने के लिए एक शिकायत ID मिलती है।',
+    how_note: 'एक ही स्थान की शिकायतें एक घटना में मिला दी जाती हैं, जिसमें समर्थन गिनती प्राथमिकता बढ़ाती है।',
+    dup_notice: 'यह पास में पहले से दर्ज हो सकती है। इसे समर्थन देना नई शिकायत से तेज़ है।',
+    support_btn: 'समर्थन करें',
+    val_err: 'कृपया विवरण, क्षेत्र और स्थान (अक्षांश और देशांतर) जोड़ें। यदि आपने अन्य चुना है, तो समस्या बताएं।',
+    reg_ok: 'शिकायत दर्ज हुई। आपकी ID है', reg_note: 'प्रगति ट्रैक करने के लिए इसे सुरक्षित रखें।',
+    track_this: 'इस शिकायत को ट्रैक करें',
+    track_h: 'शिकायत ट्रैक करें', track_ph: 'शिकायत ID दर्ज करें, जैसे CS-1001', find_btn: 'खोजें', not_found: 'उस ID से कोई शिकायत नहीं मिली।',
+    history_h: 'इतिहास', before: 'पहले', after_lbl: 'बाद में',
+    fixed_q: 'क्या यह सच में ठीक हो गया?', yes_confirm: 'हाँ, पुष्टि करें', no_reopen: 'नहीं, फिर खोलें', citizen_confirmed: 'नागरिक ने सुधार की पुष्टि की।',
+    map_h: 'सार्वजनिक शिकायत नक्शा', no_complaints: 'अभी कोई शिकायत नहीं।',
+    map_note: 'दर्ज स्थानों का模式 नक्शा। बड़े बिंदुओं को अधिक समर्थन है। लाल: प्रगति में, पीला: नया दर्ज, हरा: हल हुआ। खोलने के लिए बिंदु पर क्लिक करें।',
+    gmaps: 'इस क्षेत्र को Google Maps में खोलें', gmaps_dot: 'Google Maps में खोलें',
+    all_complaints: 'सभी शिकायतें',
+    admin_h: 'प्राधिकरण डैशबोर्ड', signed_as: 'साइन इन:', signout: 'साइन आउट',
+    total: 'कुल', pending: 'लंबित', overdue_lbl: 'अतिदेय (एस्केलेटेड)',
+    all_cats: 'सभी श्रेणियां', all_statuses: 'सभी स्थितियां', filter_area: 'क्षेत्र से फ़िल्टर करें', export_csv: 'CSV निर्यात करें',
+    priority_lbl: 'प्राथमिकता', after_photo: 'बाद की फोटो', no_match: 'कोई शिकायत मेल नहीं खाती।',
+    staff_foot: 'स्टाफ सत्र सर्वर द्वारा प्रबंधित किए जाते हैं।',
+    signin_h: 'प्राधिकरण साइन-इन', signin_note: 'केवल नगर निगम कर्मचारियों के लिए।',
+    lbl_user: 'उपयोगकर्ता नाम', lbl_pass: 'पासवर्ड', signin_btn: 'साइन इन',
+    no_photo: 'कोई फोटो नहीं', support: 'समर्थन',
+    cat_power: 'बिजली कटौती', cat_bribe: 'रिश्वत / भ्रष्टाचार', cat_health: 'खराब स्वास्थ्य सेवा', cat_absent: 'अनुपस्थित अधिकारी / सेवा',
+  },
+};
+
+const t = key => STRINGS[LANG][key] || STRINGS.en[key] || key;
+
 /* ── Constants ─────────────────────────────────────────────── */
 
 const CATS = {
@@ -11,6 +118,10 @@ const CATS = {
   "Garbage collection":     2,
   "Streetlight not working":1,
   "Footpath damage":        1,
+  "Power outage":           2,
+  "Bribery / corruption":   5,
+  "Poor healthcare service":3,
+  "Absent official / service":2,
   "Others":                 2,
 };
 
@@ -63,14 +174,14 @@ function save() {}
 
 function gate() {
   return `<div class="card" style="max-width:420px;margin:30px auto">
-    <h2 style="font-size:26px;margin-bottom:4px">Authority sign-in</h2>
-    <p class="meta">For municipal staff only.</p>
+    <h2 style="font-size:26px;margin-bottom:4px">${t('signin_h')}</h2>
+    <p class="meta">${t('signin_note')}</p>
     <form id="lf">
-      <label for="lu">Username</label>
+      <label for="lu">${t('lbl_user')}</label>
       <input id="lu" autocomplete="username" required>
-      <label for="lp">Password</label>
+      <label for="lp">${t('lbl_pass')}</label>
       <input id="lp" type="password" autocomplete="current-password" required>
-      <p><button class="pri" type="submit">Sign in</button></p>
+      <p><button class="pri" type="submit">${t('signin_btn')}</button></p>
       <div id="lmsg" class="meta" role="alert"></div>
     </form>
   </div>`;
@@ -130,7 +241,7 @@ const dist     = (a, b) => { const dx = (a.lat - b.lat) * 111e3, dy = (a.lng - b
 function thumb(c) {
   return c.photo
     ? `<img class="thumb" src="${c.photo}" alt="Photo of ${esc(c.cat)}">`
-    : `<div class="thumb">No photo</div>`;
+    : `<div class="thumb">${t('no_photo')}</div>`;
 }
 
 function card(c, extra = "") {
@@ -165,74 +276,82 @@ V.home = () => {
     "Garbage collection":      "🗑️",
     "Streetlight not working": "💡",
     "Footpath damage":         "🚧",
+    "Power outage":             "⚡",
+    "Bribery / corruption":     "💰",
+    "Poor healthcare service":  "🏥",
+    "Absent official / service":"🚫",
     "Others":                  "📝",
   };
   return `<section class="herox">
     <div style="position:relative;z-index:1">
-      <h1><span>Report it.</span><span class="o">Track it.</span><span class="g">Fix it.</span></h1>
-      <p>CitySaathi is your neighbourhood companion for civic problems. Report sewage, drainage, water and road issues with a photo and a location, then follow each complaint until it is fixed.</p>
+      <h1><span>${t('hero_h1a')}</span><span class="o">${t('hero_h1b')}</span><span class="g">${t('hero_h1c')}</span></h1>
+      <p>${t('hero_p')}</p>
       <p>
-        <button class="gold" onclick="location.hash='report'">Report a problem</button>
-        <button class="sec"  onclick="location.hash='map'">See the public map</button>
+        <button class="gold" onclick="location.hash='report'">${t('hero_btn1')}</button>
+        <button class="sec"  onclick="location.hash='map'">${t('hero_btn2')}</button>
       </p>
     </div>
-    <div class="lc"><img src="logo.png" alt="CitySaathi: Report it. Track it. Fix it."></div>
+    <div class="lc"><img src="logo1.png" alt="CitySaathi"></div>
   </section>
   <div class="stats3">
-    <div class="stat"><b>${DB.length}</b><span>Complaints registered</span></div>
-    <div class="stat"><b>${o}</b><span>Open right now</span></div>
-    <div class="stat"><b>${r}</b><span>Resolved</span></div>
+    <div class="stat"><b>${DB.length}</b><span>${t('stat1')}</span></div>
+    <div class="stat"><b>${o}</b><span>${t('stat2')}</span></div>
+    <div class="stat"><b>${r}</b><span>${t('stat3')}</span></div>
   </div>
   <div class="steps">
-    <div class="step"><h3>Report</h3><p>Pick the problem, add a photo and share the spot. Nearby duplicates are merged into one incident.</p></div>
-    <div class="step"><h3>Track</h3><p>Every complaint gets an ID and a visible timeline from reported to resolved.</p></div>
-    <div class="step"><h3>Fix</h3><p>Authorities assign teams, upload an after-photo and you confirm the fix.</p></div>
+    <div class="step"><h3>${t('step1_h')}</h3><p>${t('step1_p')}</p></div>
+    <div class="step"><h3>${t('step2_h')}</h3><p>${t('step2_p')}</p></div>
+    <div class="step"><h3>${t('step3_h')}</h3><p>${t('step3_p')}</p></div>
   </div>
   <div class="card" style="margin-bottom:22px">
-    <h2 style="font-size:22px">What would you like to report?</h2>
-    <div class="cats">${Object.keys(CATS).map(c => `<button class="cat" onclick="window.PRE='${c}';location.hash='report'"><b>${E[c]}</b>${c}</button>`).join("")}</div>
+    <h2 style="font-size:22px">${t('cats_h')}</h2>
+    <div class="cats">${Object.keys(CATS).map(c => {
+      const catLabels = { 'Power outage': t('cat_power'), 'Bribery / corruption': t('cat_bribe'), 'Poor healthcare service': t('cat_health'), 'Absent official / service': t('cat_absent') };
+      const label = catLabels[c] || c;
+      return `<button class="cat" onclick="window.PRE='${c}';location.hash='report'"><b>${E[c]}</b>${label}</button>`;
+    }).join("")}</div>
   </div>
   <div class="card">
-    <h2 style="font-size:22px;margin-bottom:6px">Most supported problems</h2>
-    ${DB.filter(open).sort((a, b) => b.votes - a.votes).slice(0, 4).map(c => card(c, `<button class="sec sm" onclick="vote('${c.id}')">▲ ${c.votes} support</button>`)).join("") || "<p>No open complaints.</p>"}
+    <h2 style="font-size:22px;margin-bottom:6px">${t('top_h')}</h2>
+    ${DB.filter(open).sort((a, b) => b.votes - a.votes).slice(0, 4).map(c => card(c, `<button class="sec sm" onclick="vote('${c.id}')">▲ ${c.votes} ${t('support')}</button>`)).join("") || `<p>${t('no_open')}</p>`}
   </div>
-  <p class="foot">Complaints are saved on the CitySaathi server. Municipal routing needs an agreement with the local authority.</p>`;
+  <p class="foot">${t('foot')}</p>`;
 };
 
-V.report = () => `<h2 style="font-size:28px;margin-bottom:14px">Report a problem</h2>
+V.report = () => `<h2 style="font-size:28px;margin-bottom:14px">${t('report_h')}</h2>
   <div class="grid2">
     <form class="card" id="f" onsubmit="return false">
-      <label for="cat">What is the problem?</label>
+      <label for="cat">${t('lbl_cat')}</label>
       <select id="cat">${Object.keys(CATS).map(c => `<option>${c}</option>`).join("")}</select>
       <div id="oth" hidden>
-        <label for="spec">Please specify the problem</label>
-        <input id="spec" placeholder="e.g. Stray animals, illegal dumping">
+        <label for="spec">${t('lbl_spec')}</label>
+        <input id="spec" placeholder="${t('spec_ph')}">
       </div>
-      <label for="desc">Describe it</label>
-      <textarea id="desc" placeholder="What is happening and how long has it been going on?"></textarea>
-      <label for="area">Area / ward</label>
-      <input id="area" placeholder="e.g. Naranpura, Ward 12">
-      <label>Location</label>
+      <label for="desc">${t('lbl_desc')}</label>
+      <textarea id="desc" placeholder="${t('desc_ph')}"></textarea>
+      <label for="area">${t('lbl_area')}</label>
+      <input id="area" placeholder="${t('area_ph')}">
+      <label>${t('lbl_loc')}</label>
       <div class="row">
-        <input id="lat" placeholder="Latitude"  inputmode="decimal">
-        <input id="lng" placeholder="Longitude" inputmode="decimal">
+        <input id="lat" placeholder="${t('lat_ph')}" inputmode="decimal">
+        <input id="lng" placeholder="${t('lng_ph')}" inputmode="decimal">
       </div>
-      <p><button type="button" class="sec sm" id="gps">Use my current location</button> <span class="meta" id="gpsmsg"></span></p>
-      <label for="ph">Photo</label>
+      <p><button type="button" class="sec sm" id="gps">${t('gps_btn')}</button> <span class="meta" id="gpsmsg"></span></p>
+      <label for="ph">${t('lbl_photo')}</label>
       <input id="ph" type="file" accept="image/*">
       <div id="dup"></div>
-      <p><button class="pri" id="sub">Submit complaint</button></p>
+      <p><button class="pri" id="sub">${t('submit_btn')}</button></p>
       <div id="res"></div>
     </form>
     <div class="card">
-      <h3>How it works</h3>
+      <h3>${t('how_h')}</h3>
       <ol>
-        <li>Pick the problem type and add a photo.</li>
-        <li>Share the location so the right ward can find it.</li>
-        <li>We check for a nearby report of the same problem first, to avoid duplicates.</li>
-        <li>You get a complaint ID to track progress.</li>
+        <li>${t('how1')}</li>
+        <li>${t('how2')}</li>
+        <li>${t('how3')}</li>
+        <li>${t('how4')}</li>
       </ol>
-      <p class="meta">Complaints from the same spot are merged into one incident, with a support count that raises its priority.</p>
+      <p class="meta">${t('how_note')}</p>
     </div>
   </div>`;
 
@@ -240,11 +359,11 @@ V.report.init = () => {
   if (window.PRE) { $("#cat").value = window.PRE; window.PRE = ""; }
 
   $("#gps").onclick = () => {
-    if (!navigator.geolocation) { $("#gpsmsg").textContent = "Location is not available in this browser."; return; }
-    $("#gpsmsg").textContent = "Finding you…";
+    if (!navigator.geolocation) { $("#gpsmsg").textContent = t('gps_na'); return; }
+    $("#gpsmsg").textContent = t('gps_finding');
     navigator.geolocation.getCurrentPosition(
-      p => { $("#lat").value = p.coords.latitude.toFixed(5); $("#lng").value = p.coords.longitude.toFixed(5); $("#gpsmsg").textContent = "Location captured."; checkDup(); },
-      ()  => { $("#gpsmsg").textContent = "Could not get location. Enter it manually."; }
+      p => { $("#lat").value = p.coords.latitude.toFixed(5); $("#lng").value = p.coords.longitude.toFixed(5); $("#gpsmsg").textContent = t('gps_ok'); checkDup(); },
+      ()  => { $("#gpsmsg").textContent = t('gps_err'); }
     );
   };
 
@@ -253,7 +372,7 @@ V.report.init = () => {
     if (!p.lat || !p.lng) { $("#dup").innerHTML = ""; return; }
     const near = DB.filter(c => open(c) && c.cat === $("#cat").value && dist(c, p) < 250);
     $("#dup").innerHTML = near.length
-      ? `<div class="notice"><b>This may already be reported nearby.</b> Supporting it is faster than a new complaint.${near.map(c => `<div style="margin-top:8px">${c.id} · ${esc(c.area)} · ${c.votes} support <button class="gold sm" onclick="vote('${c.id}',true)">Support this</button></div>`).join("")}</div>`
+      ? `<div class="notice"><b>${t('dup_notice')}</b>${near.map(c => `<div style="margin-top:8px">${c.id} · ${esc(c.area)} · ${c.votes} ${t('support')} <button class="gold sm" onclick="vote('${c.id}',true)">${t('support_btn')}</button></div>`).join("")}</div>`
       : "";
   };
 
@@ -270,7 +389,7 @@ V.report.init = () => {
     const desc = $("#desc").value.trim();
 
     if (!desc || !area || isNaN(lat) || isNaN(lng) || ($("#cat").value === "Others" && !$("#spec").value.trim())) {
-      $("#res").innerHTML = '<div class="notice">Please add a description, area and location (latitude and longitude). If you chose Others, say what the problem is.</div>';
+      $("#res").innerHTML = `<div class="notice">${t('val_err')}</div>`;
       return;
     }
 
@@ -292,7 +411,7 @@ V.report.init = () => {
       return;
     }
 
-    $("#res").innerHTML = `<div class="ok"><b>Complaint registered.</b> Your ID is <b>${id}</b>. Keep it to track progress.<p><button class="sec sm" onclick="location.hash='track/${id}'">Track this complaint</button></p></div>`;
+    $("#res").innerHTML = `<div class="ok"><b>${t('reg_ok')} <b>${id}</b>. ${t('reg_note')}<p><button class="sec sm" onclick="location.hash='track/${id}'">${t('track_this')}</button></p></div>`;
     $("#f").reset();
     $("#dup").innerHTML = "";
   };
@@ -300,13 +419,13 @@ V.report.init = () => {
 
 V.track = (arg) => {
   const c = DB.find(x => x.id === (arg || "").toUpperCase());
-  return `<h2 style="font-size:28px;margin-bottom:14px">Track a complaint</h2>
+  return `<h2 style="font-size:28px;margin-bottom:14px">${t('track_h')}</h2>
     <div class="card">
       <div class="row">
-        <input id="tid" placeholder="Enter complaint ID, e.g. CS-1001" value="${esc(arg || "")}" aria-label="Complaint ID">
-        <button class="pri" style="flex:0" onclick="location.hash='track/'+$('#tid').value.trim()">Find</button>
+        <input id="tid" placeholder="${t('track_ph')}" value="${esc(arg || "")}" aria-label="Complaint ID">
+        <button class="pri" style="flex:0" onclick="location.hash='track/'+$('#tid').value.trim()">${t('find_btn')}</button>
       </div>
-      ${arg && !c ? '<div class="notice">No complaint found with that ID.</div>' : ""}
+      ${arg && !c ? `<div class="notice">${t('not_found')}</div>` : ""}
       ${c ? detail(c) : ""}
     </div>`;
 };
@@ -314,21 +433,21 @@ V.track = (arg) => {
 function detail(c) {
   const i = FLOW.indexOf(c.status);
   return `<h3 style="margin-top:20px">${esc(c.cat)}${c.other ? ": " + esc(c.other) : ""} <span class="pill ${c.status.split(" ")[0]}">${c.status}</span></h3>
-    <div class="meta">${c.id} · ${esc(c.area)} · ${esc(c.dept)} · Priority ${plabel(c)} · ${c.votes} support</div>
+    <div class="meta">${c.id} · ${esc(c.area)} · ${esc(c.dept)} · ${t('priority_lbl')} ${plabel(c)} · ${c.votes} ${t('support')}</div>
     <div class="tl">${FLOW.map((s, k) => `<span class="${k <= i ? "done" : ""}">${s}</span>`).join("")}</div>
     <p>${esc(c.desc)}</p>
     <div class="ba">
-      ${c.photo ? `<div><img src="${c.photo}" alt="Before"><div class="meta">Before</div></div>` : ""}
-      ${c.after ? `<div><img src="${c.after}" alt="After"><div class="meta">After</div></div>`   : ""}
+      ${c.photo ? `<div><img src="${c.photo}" alt="${t('before')}"><div class="meta">${t('before')}</div></div>` : ""}
+      ${c.after ? `<div><img src="${c.after}" alt="${t('after_lbl')}"><div class="meta">${t('after_lbl')}</div></div>` : ""}
     </div>
-    <h3 style="font-size:17px;margin-top:16px">History</h3>
+    <h3 style="font-size:17px;margin-top:16px">${t('history_h')}</h3>
     ${c.log.map(l => `<div class="meta">${fmt(l.t)} · ${esc(l.m)}</div>`).join("")}
-    ${c.status === "Resolved" ? `<div class="notice"><b>Is it really fixed?</b> <button class="sec sm" onclick="feedback('${c.id}',true)">Yes, confirm</button> <button class="sec sm" onclick="feedback('${c.id}',false)">No, reopen</button></div>` : ""}
-    ${c.status === "Closed" && c.rating ? `<p class="meta">Citizen confirmed the fix.</p>` : ""}`;
+    ${c.status === "Resolved" ? `<div class="notice"><b>${t('fixed_q')}</b> <button class="sec sm" onclick="feedback('${c.id}',true)">${t('yes_confirm')}</button> <button class="sec sm" onclick="feedback('${c.id}',false)">${t('no_reopen')}</button></div>` : ""}
+    ${c.status === "Closed" && c.rating ? `<p class="meta">${t('citizen_confirmed')}</p>` : ""}`;
 }
 
 V.map = () => {
-  if (!DB.length) return '<h2 style="font-size:28px;margin-bottom:14px">Public complaint map</h2><div class="card"><p>No complaints yet.</p></div>';
+  if (!DB.length) return `<h2 style="font-size:28px;margin-bottom:14px">${t('map_h')}</h2><div class="card"><p>${t('no_complaints')}</p></div>`;
 
   const f  = [...DB];
   const la = f.map(c => c.lat);
@@ -336,24 +455,24 @@ V.map = () => {
   const a  = Math.min(...la) - .004, b = Math.max(...la) + .004;
   const x  = Math.min(...ln) - .004, y = Math.max(...ln) + .004;
 
-  return `<h2 style="font-size:28px;margin-bottom:14px">Public complaint map</h2>
+  return `<h2 style="font-size:28px;margin-bottom:14px">${t('map_h')}</h2>
     <div class="card">
       <div class="map" id="m">
         ${f.map(c => {
           const r = 10 + Math.min(c.votes, 8) * 3;
           return `<div class="dot ${c.status.split(" ")[0]}" role="button" tabindex="0"
             style="left:${(c.lng - x) / (y - x) * 100}%;top:${100 - (c.lat - a) / (b - a) * 100}%;width:${r}px;height:${r}px"
-            title="${esc(c.cat)} · ${esc(c.area)} · ${c.votes} support"
+            title="${esc(c.cat)} · ${esc(c.area)} · ${c.votes} ${t('support')}"
             onclick="location.hash='track/${c.id}'"></div>`;
         }).join("")}
       </div>
-      <p class="meta">Schematic map of reported spots. Larger dots have more support. Red: in progress or assigned, yellow: newly reported, green: resolved. Click a dot to open it.
-        <a href="https://www.google.com/maps?q=${((a + b) / 2).toFixed(5)},${((x + y) / 2).toFixed(5)}&z=13" target="_blank" rel="noopener" style="color:var(--blue)">Open this area in Google Maps</a>.
+      <p class="meta">${t('map_note')}
+        <a href="https://www.google.com/maps?q=${((a + b) / 2).toFixed(5)},${((x + y) / 2).toFixed(5)}&z=13" target="_blank" rel="noopener" style="color:var(--blue)">${t('gmaps')}</a>.
       </p>
     </div>
     <div class="card" style="margin-top:20px">
-      <h3>All complaints</h3>
-      ${DB.map(c => card(c, `<button class="sec sm" onclick="vote('${c.id}')">▲ ${c.votes}</button><a href="https://www.google.com/maps?q=${c.lat},${c.lng}" target="_blank" rel="noopener" style="display:block;margin-top:6px;font-size:14px;color:var(--blue)">Open in Google Maps</a>`)).join("")}
+      <h3>${t('all_complaints')}</h3>
+      ${DB.map(c => card(c, `<button class="sec sm" onclick="vote('${c.id}')">▲ ${c.votes}</button><a href="https://www.google.com/maps?q=${c.lat},${c.lng}" target="_blank" rel="noopener" style="display:block;margin-top:6px;font-size:14px;color:var(--blue)">${t('gmaps_dot')}</a>`)).join("")}
     </div>`;
 };
 
@@ -448,7 +567,13 @@ function render() {
   const v = V[r] || V.home;
   $("#app").innerHTML = v(arg ? decodeURIComponent(arg) : "");
   (V[r] || {}).init && V[r].init();
-  document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + (V[r] ? r : "home")));
+  const navKeys = ["nav_home", "nav_report", "nav_track", "nav_map", "nav_admin"];
+  document.querySelectorAll("#nav a").forEach((a, i) => {
+    a.classList.toggle("on", a.getAttribute("href") === "#" + (V[r] ? r : "home"));
+    if (navKeys[i]) a.textContent = t(navKeys[i]);
+  });
+  const btn = document.getElementById("langbtn");
+  if (btn) btn.textContent = LANG === "en" ? "हिंदी" : "English";
   window.scrollTo(0, 0);
 }
 
