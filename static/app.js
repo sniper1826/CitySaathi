@@ -27,8 +27,11 @@ const STRINGS = {
     lbl_cat: 'What is the problem?', lbl_spec: 'Please specify the problem', spec_ph: 'e.g. Stray animals, illegal dumping',
     lbl_desc: 'Describe it', desc_ph: 'What is happening and how long has it been going on?',
     lbl_area: 'Area / ward', area_ph: 'e.g. Naranpura, Ward 12',
-    lbl_loc: 'Location', lat_ph: 'Latitude', lng_ph: 'Longitude',
-    gps_btn: 'Use my current location', gps_finding: 'Finding you…', gps_ok: 'Location captured.', gps_err: 'Could not get location. Enter it manually.', gps_na: 'Location is not available in this browser.',
+    lbl_pin: 'Pincode', pin_ph: '6-digit pincode, e.g. 380013',
+    pin_err: 'Could not find that pincode. Please check and try again.',
+    pin_finding: 'Verifying pincode…',
+    pin_ok: 'Pincode accepted.',
+    pin_invalid: 'Please enter a valid 6-digit pincode.',
     lbl_photo: 'Photo', submit_btn: 'Submit complaint',
     how_h: 'How it works',
     how1: 'Pick the problem type and add a photo.', how2: 'Share the location so the right ward can find it.',
@@ -36,7 +39,7 @@ const STRINGS = {
     how_note: 'Complaints from the same spot are merged into one incident, with a support count that raises its priority.',
     dup_notice: 'This may already be reported nearby. Supporting it is faster than a new complaint.',
     support_btn: 'Support this',
-    val_err: 'Please add a description, area and location (latitude and longitude). If you chose Others, say what the problem is.',
+    val_err: 'Please add a description, area and a valid 6-digit pincode. If you chose Others, say what the problem is.',
     reg_ok: 'Complaint registered. Your ID is', reg_note: 'Keep it to track progress.',
     track_this: 'Track this complaint',
     track_h: 'Track a complaint', track_ph: 'Enter complaint ID, e.g. CS-1001', find_btn: 'Find', not_found: 'No complaint found with that ID.',
@@ -76,8 +79,11 @@ const STRINGS = {
     lbl_cat: 'समस्या क्या है?', lbl_spec: 'कृपया समस्या स्पष्ट करें', spec_ph: 'जैसे आवारा जानवर, अवैध डंपिंग',
     lbl_desc: 'विवरण दें', desc_ph: 'क्या हो रहा है और कब से हो रहा है?',
     lbl_area: 'क्षेत्र / वार्ड', area_ph: 'जैसे नारणपुरा, वार्ड 12',
-    lbl_loc: 'स्थान', lat_ph: 'अक्षांश', lng_ph: 'देशांतर',
-    gps_btn: 'मेरा वर्तमान स्थान उपयोग करें', gps_finding: 'आपको ढूंढ रहे हैं…', gps_ok: 'स्थान प्राप्त हुआ।', gps_err: 'स्थान नहीं मिला। मैन्युअल दर्ज करें।', gps_na: 'इस ब्राउज़र में स्थान उपलब्ध नहीं है।',
+    lbl_pin: 'पिनकोड', pin_ph: '6 अंकों का पिनकोड, जैसे 380013',
+    pin_err: 'वह पिनकोड नहीं मिला। कृपया जांचें और पुनः प्रयास करें।',
+    pin_finding: 'पिनकोड जांच हो रही है…',
+    pin_ok: 'पिनकोड स्वीकार किया।',
+    pin_invalid: 'कृपया 6 अंकों का वैध पिनकोड दर्ज करें।',
     lbl_photo: 'फोटो', submit_btn: 'शिकायत दर्ज करें',
     how_h: 'यह कैसे काम करता है',
     how1: 'समस्या का प्रकार चुनें और फोटो जोड़ें।', how2: 'स्थान साझा करें ताकि सही वार्ड इसे ढूंढ सके।',
@@ -85,7 +91,7 @@ const STRINGS = {
     how_note: 'एक ही स्थान की शिकायतें एक घटना में मिला दी जाती हैं, जिसमें समर्थन गिनती प्राथमिकता बढ़ाती है।',
     dup_notice: 'यह पास में पहले से दर्ज हो सकती है। इसे समर्थन देना नई शिकायत से तेज़ है।',
     support_btn: 'समर्थन करें',
-    val_err: 'कृपया विवरण, क्षेत्र और स्थान (अक्षांश और देशांतर) जोड़ें। यदि आपने अन्य चुना है, तो समस्या बताएं।',
+    val_err: 'कृपया विवरण, क्षेत्र और 6 अंकों का वैध पिनकोड जोड़ें। यदि आपने अन्य चुना है, तो समस्या बताएं।',
     reg_ok: 'शिकायत दर्ज हुई। आपकी ID है', reg_note: 'प्रगति ट्रैक करने के लिए इसे सुरक्षित रखें।',
     track_this: 'इस शिकायत को ट्रैक करें',
     track_h: 'शिकायत ट्रैक करें', track_ph: 'शिकायत ID दर्ज करें, जैसे CS-1001', find_btn: 'खोजें', not_found: 'उस ID से कोई शिकायत नहीं मिली।',
@@ -338,12 +344,9 @@ V.report = () => `<h2 style="font-size:28px;margin-bottom:14px">${t('report_h')}
       <textarea id="desc" placeholder="${t('desc_ph')}"></textarea>
       <label for="area">${t('lbl_area')}</label>
       <input id="area" placeholder="${t('area_ph')}">
-      <label>${t('lbl_loc')}</label>
-      <div class="row">
-        <input id="lat" placeholder="${t('lat_ph')}" inputmode="decimal">
-        <input id="lng" placeholder="${t('lng_ph')}" inputmode="decimal">
-      </div>
-      <p><button type="button" class="sec sm" id="gps">${t('gps_btn')}</button> <span class="meta" id="gpsmsg"></span></p>
+      <label for="pin">${t('lbl_pin')}</label>
+      <input id="pin" placeholder="${t('pin_ph')}" inputmode="numeric" maxlength="6">
+      <span class="meta" id="pinmsg"></span>
       <label for="ph">${t('lbl_photo')}</label>
       <input id="ph" type="file" accept="image/*">
       <div id="dup"></div>
@@ -365,55 +368,37 @@ V.report = () => `<h2 style="font-size:28px;margin-bottom:14px">${t('report_h')}
 V.report.init = () => {
   if (window.PRE) { $("#cat").value = window.PRE; window.PRE = ""; }
 
-  $("#gps").onclick = () => {
-    if (!navigator.geolocation) { $("#gpsmsg").textContent = t('gps_na'); return; }
-    $("#gpsmsg").textContent = t('gps_finding');
-    navigator.geolocation.getCurrentPosition(
-      p => { $("#lat").value = p.coords.latitude.toFixed(5); $("#lng").value = p.coords.longitude.toFixed(5); $("#gpsmsg").textContent = t('gps_ok'); checkDup(); },
-      ()  => { $("#gpsmsg").textContent = t('gps_err'); }
-    );
-  };
-
-  const checkDup = () => {
-    const p = { lat: +$("#lat").value, lng: +$("#lng").value };
-    if (!p.lat || !p.lng) { $("#dup").innerHTML = ""; return; }
-    const near = DB.filter(c => open(c) && c.cat === $("#cat").value && dist(c, p) < 250);
-    $("#dup").innerHTML = near.length
-      ? `<div class="notice"><b>${t('dup_notice')}</b>${near.map(c => `<div style="margin-top:8px">${c.id} · ${esc(c.area)} · ${c.votes} ${t('support')} <button class="gold sm" onclick="vote('${c.id}',true)">${t('support_btn')}</button></div>`).join("")}</div>`
-      : "";
-  };
-
-  ["lat", "lng"].forEach(i => $("#" + i).onchange = checkDup);
-
   const tg = () => { $("#oth").hidden = $("#cat").value !== "Others"; };
-  $("#cat").onchange = () => { tg(); checkDup(); };
+  $("#cat").onchange = tg;
   tg();
 
   $("#sub").onclick = async () => {
-    const lat  = parseFloat($("#lat").value);
-    const lng  = parseFloat($("#lng").value);
+    const pin  = $("#pin").value.trim();
     const area = $("#area").value.trim();
     const desc = $("#desc").value.trim();
 
-    if (!desc || !area || isNaN(lat) || isNaN(lng) || ($("#cat").value === "Others" && !$("#spec").value.trim())) {
+    if (!desc || !area || !/^\d{6}$/.test(pin) || ($("#cat").value === "Others" && !$("#spec").value.trim())) {
       $("#res").innerHTML = `<div class="notice">${t('val_err')}</div>`;
       return;
     }
+
+    $("#pinmsg").textContent = t('pin_finding');
 
     const fd = new FormData();
     fd.append("category",    $("#cat").value);
     fd.append("other",       $("#cat").value === "Others" ? $("#spec").value.trim() : "");
     fd.append("area",        area);
     fd.append("description", desc);
-    fd.append("lat",         lat);
-    fd.append("lng",         lng);
+    fd.append("pincode",     pin);
     if ($("#ph").files[0]) fd.append("photo", $("#ph").files[0]);
 
     let id;
     try {
       id = (await api("/api/complaints", { method: "POST", body: fd })).id;
+      $("#pinmsg").textContent = t('pin_ok');
       await load();
     } catch (e) {
+      $("#pinmsg").textContent = "";
       $("#res").innerHTML = '<div class="notice">' + esc(e.message) + '</div>';
       return;
     }

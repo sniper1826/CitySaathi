@@ -4,7 +4,7 @@ Run:  flask --app app init-db
       flask --app app create-staff --role admin
       flask --app app run
 """
-import csv, io, math, os, secrets, sqlite3, time
+import csv, io, json, math, os, secrets, sqlite3, time, urllib.request
 from datetime import timedelta
 from functools import wraps
 from pathlib import Path
@@ -54,12 +54,13 @@ CREATE TABLE IF NOT EXISTS staff(
   created INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS complaints(
   id TEXT PRIMARY KEY, category TEXT NOT NULL, other TEXT NOT NULL DEFAULT '',
-  area TEXT NOT NULL, description TEXT NOT NULL, lat REAL NOT NULL, lng REAL NOT NULL,
+  area TEXT NOT NULL, description TEXT NOT NULL, pincode TEXT NOT NULL DEFAULT '',
+  lat REAL NOT NULL DEFAULT 0, lng REAL NOT NULL DEFAULT 0,
   status TEXT NOT NULL DEFAULT 'Reported', dept TEXT NOT NULL DEFAULT 'Unassigned',
   created INTEGER NOT NULL, updated INTEGER NOT NULL,
   photo TEXT NOT NULL DEFAULT '', after_photo TEXT NOT NULL DEFAULT '', rating INTEGER NOT NULL DEFAULT 0);
 CREATE INDEX IF NOT EXISTS idx_c_status ON complaints(status);
-CREATE INDEX IF NOT EXISTS idx_c_geo ON complaints(lat, lng);
+CREATE INDEX IF NOT EXISTS idx_c_pin ON complaints(pincode);
 CREATE TABLE IF NOT EXISTS votes(
   complaint_id TEXT NOT NULL REFERENCES complaints(id) ON DELETE CASCADE,
   voter TEXT NOT NULL, created INTEGER NOT NULL, PRIMARY KEY(complaint_id, voter));
@@ -106,6 +107,10 @@ def init_db():
     UPLOADS.mkdir(parents=True, exist_ok=True)
     c = sqlite3.connect(DB_PATH)
     c.executescript(SCHEMA)
+    # migrate existing databases that predate the pincode column
+    cols = {r[1] for r in c.execute("PRAGMA table_info(complaints)")}
+    if "pincode" not in cols:
+        c.execute("ALTER TABLE complaints ADD COLUMN pincode TEXT NOT NULL DEFAULT ''")
     c.commit()
     c.close()
 
@@ -196,6 +201,22 @@ def haversine(a_lat, a_lng, b_lat, b_lng):
     return 12_742_000 * math.asin(math.sqrt(h))
 
 
+def resolve_pincode(pin):
+    """Return (lat, lng) for a 6-digit Indian pincode via Nominatim, or raise ApiError."""
+    try:
+        url = f"https://nominatim.openstreetmap.org/search?postalcode={pin}&country=India&format=json&limit=1"
+        req = urllib.request.Request(url, headers={"User-Agent": "CitySaathi/1.0"})
+        with urllib.request.urlopen(req, timeout=5) as r:
+            data = json.loads(r.read())
+        lat, lng = float(data[0]["lat"]), float(data[0]["lon"])
+        if not (math.isfinite(lat) and math.isfinite(lng)):
+            raise ValueError
+        return lat, lng
+    
+    except Exception:        
+        raise ApiError("Could not resolve that pincode. Please check and try again.", 422)
+
+
 def is_open(status):
     return status not in ("Resolved", "Closed")
 
@@ -215,8 +236,8 @@ def to_json(rows):
         for e in db().execute(f"SELECT complaint_id,ts,message FROM events WHERE complaint_id IN ({marks}) ORDER BY ts,id", ids):
             logs.setdefault(e["complaint_id"], []).append({"t": e["ts"], "m": e["message"]})
     return [{"id": r["id"], "cat": r["category"], "other": r["other"], "area": r["area"],
-             "desc": r["description"], "lat": r["lat"], "lng": r["lng"], "votes": r["votes"],
-             "status": r["status"], "dept": r["dept"], "created": r["created"],
+             "desc": r["description"], "pincode": r["pincode"], "lat": r["lat"], "lng": r["lng"],
+             "votes": r["votes"], "status": r["status"], "dept": r["dept"], "created": r["created"],
              "photo": f"/uploads/{r['photo']}" if r["photo"] else "",
              "after": f"/uploads/{r['after_photo']}" if r["after_photo"] else "",
              "rating": r["rating"], "overdue": overdue(r), "log": logs.get(r["id"], [])}
@@ -279,12 +300,16 @@ def one_complaint(cid):
 
 @app.get("/api/nearby")
 def nearby():
-    try:
-        lat, lng = float(request.args["lat"]), float(request.args["lng"])
-    except (KeyError, ValueError):
-        raise ApiError("lat and lng are required.")
+    pin = request.args.get("pincode", "").strip()
     cat = request.args.get("category", "")
-    box = 0.005  # ~500 m bounding box before exact distance check
+    if pin:
+        lat, lng = resolve_pincode(pin)
+    else:
+        try:
+            lat, lng = float(request.args["lat"]), float(request.args["lng"])
+        except (KeyError, ValueError):
+            raise ApiError("pincode or lat/lng are required.")
+    box = 0.005
     rows = db().execute(SELECT + "WHERE c.category=? AND c.status NOT IN('Resolved','Closed') "
                         "AND c.lat BETWEEN ? AND ? AND c.lng BETWEEN ? AND ?",
                         (cat, lat - box, lat + box, lng - box, lng + box)).fetchall()
@@ -305,19 +330,17 @@ def create_complaint():
     area, desc = f.get("area", "").strip()[:120], f.get("description", "").strip()[:1000]
     if not area or not desc:
         raise ApiError("Area and description are required.")
-    try:
-        lat, lng = float(f["lat"]), float(f["lng"])
-    except (KeyError, ValueError):
-        raise ApiError("A valid location is required.")
-    if not (math.isfinite(lat) and math.isfinite(lng) and -90 <= lat <= 90 and -180 <= lng <= 180):
-        raise ApiError("Location is out of range.")
+    pin = f.get("pincode", "").strip()
+    if not pin.isdigit() or len(pin) != 6:
+        raise ApiError("A valid 6-digit pincode is required.")
+    lat, lng = resolve_pincode(pin)
     photo = save_image(request.files["photo"]) if request.files.get("photo") else ""
     d, t = db(), now_ms()
     for _ in range(5):
         cid = "CS-" + "".join(secrets.choice("ABCDEFGHJKLMNPQRSTUVWXYZ23456789") for _ in range(6))
         try:
-            d.execute("INSERT INTO complaints(id,category,other,area,description,lat,lng,created,updated,photo) "
-                      "VALUES(?,?,?,?,?,?,?,?,?,?)", (cid, cat, other if cat == "Others" else "", area, desc, lat, lng, t, t, photo))
+            d.execute("INSERT INTO complaints(id,category,other,area,description,pincode,lat,lng,created,updated,photo) "
+                      "VALUES(?,?,?,?,?,?,?,?,?,?,?)", (cid, cat, other if cat == "Others" else "", area, desc, pin, lat, lng, t, t, photo))
             break
         except sqlite3.IntegrityError:
             continue
@@ -476,11 +499,10 @@ def after_photo(cid):
 def export_csv():
     out = io.StringIO()
     w = csv.writer(out)
-    w.writerow(["ID", "Category", "Details", "Area", "Status", "Department", "Support", "Created", "Description"])
+    w.writerow(["ID", "Category", "Details", "Area", "Pincode", "Status", "Department", "Support", "Created", "Description"])
     for c in to_json(db().execute(SELECT + "ORDER BY c.created DESC").fetchall()):
-        # prefix risky cells so spreadsheets do not run them as formulas
         safe = lambda v: ("'" + v) if isinstance(v, str) and v[:1] in "=+-@" else v
-        w.writerow([c["id"], c["cat"], safe(c["other"]), safe(c["area"]), c["status"], c["dept"], c["votes"],
+        w.writerow([c["id"], c["cat"], safe(c["other"]), safe(c["area"]), c["pincode"], c["status"], c["dept"], c["votes"],
                     time.strftime("%Y-%m-%d", time.gmtime(c["created"] / 1000)), safe(c["desc"])])
     return Response(out.getvalue(), mimetype="text/csv",
                     headers={"Content-Disposition": "attachment; filename=citysaathi-complaints.csv"})
@@ -521,15 +543,21 @@ def seed_demo_cmd():
     if c.execute("SELECT COUNT(*) FROM complaints").fetchone()[0]:
         raise click.ClickException("Database already has complaints.")
     t = now_ms()
-    for i, (cat, area, desc, dla, dlo, st, days, dept) in enumerate([
-        ("Sewage overflow", "Naranpura, Ward 12", "Sewage spilling onto the lane near the temple.", .004, .006, "In progress", 9, "Drainage & Sewerage"),
-        ("Pothole / road damage", "Satellite Road", "Deep pothole after rain, two-wheelers swerving.", -.012, -.02, "Reported", 5, "Unassigned"),
-        ("Garbage collection", "Maninagar, Ward 21", "Garbage not collected for four days.", -.03, .02, "Assigned", 3, "Solid Waste"),
-        ("Streetlight not working", "Vastrapur Lake road", "Three lights out on the walking stretch.", -.01, -.03, "Resolved", 8, "Electrical"),
-        ("Blocked drain", "Naranpura, Ward 12", "Drain choked with plastic, water stagnates.", .0045, .0055, "Reported", 1, "Unassigned")]):
+    seeds = [
+        ("Sewage overflow",          "Naranpura, Ward 12",    "Sewage spilling onto the lane near the temple.", "380013", "In progress", 9, "Drainage & Sewerage"),
+        ("Pothole / road damage",    "Satellite Road",        "Deep pothole after rain, two-wheelers swerving.", "380015", "Reported",    5, "Unassigned"),
+        ("Garbage collection",       "Maninagar, Ward 21",    "Garbage not collected for four days.",           "380008", "Assigned",    3, "Solid Waste"),
+        ("Streetlight not working",  "Vastrapur Lake road",   "Three lights out on the walking stretch.",       "380054", "Resolved",    8, "Electrical"),
+        ("Blocked drain",            "Naranpura, Ward 12",    "Drain choked with plastic, water stagnates.",    "380013", "Reported",    1, "Unassigned"),
+    ]
+    for i, (cat, area, desc, pin, st, days, dept) in enumerate(seeds):
+        try:
+            lat, lng = resolve_pincode(pin)
+        except ApiError:
+            lat, lng = 0.0, 0.0
         cid, ts = f"CS-DEMO{i + 1}", t - days * DAY_MS
-        c.execute("INSERT INTO complaints(id,category,area,description,lat,lng,status,dept,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?)",
-                  (cid, cat, area, desc, 23.0225 + dla, 72.5714 + dlo, st, dept, ts, ts))
+        c.execute("INSERT INTO complaints(id,category,area,description,pincode,lat,lng,status,dept,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+                  (cid, cat, area, desc, pin, lat, lng, st, dept, ts, ts))
         c.execute("INSERT INTO events(complaint_id,ts,message) VALUES(?,?,?)", (cid, ts, "Complaint registered"))
         c.execute("INSERT INTO votes VALUES(?,?,?)", (cid, f"seed{i}", ts))
     c.commit()
