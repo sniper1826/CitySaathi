@@ -4,9 +4,10 @@ Run:  flask --app app init-db
       flask --app app create-staff --role admin
       flask --app app run
 """
-import csv, io, json, math, os, secrets, sqlite3, time, urllib.request
+import csv, io, json, logging, math, os, secrets, sqlite3, time, urllib.request
 from datetime import timedelta
 from functools import wraps
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -41,6 +42,24 @@ def _secret():
 
 
 app = Flask(__name__, static_folder="static", static_url_path="")
+
+
+def _setup_logging():
+    fmt = logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s", "%Y-%m-%d %H:%M:%S")
+    root = logging.getLogger()
+    root.setLevel(logging.INFO)
+    ch = logging.StreamHandler()
+    ch.setFormatter(fmt)
+    root.addHandler(ch)
+    log_file = BASE / "citysaathi.log"
+    fh = RotatingFileHandler(log_file, maxBytes=5 * 1024 * 1024, backupCount=3, encoding="utf-8")
+    fh.setFormatter(fmt)
+    root.addHandler(fh)
+
+
+_setup_logging()
+log = logging.getLogger("citysaathi")
+
 app.config.update(
     SECRET_KEY=_secret(), MAX_CONTENT_LENGTH=8 * 1024 * 1024,
     SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax",
@@ -78,13 +97,21 @@ class ApiError(Exception):
 
 @app.errorhandler(ApiError)
 def _api_err(e):
+    log.info("%s %s -> ApiError %s: %s", request.method, request.path, e.code, e.msg)
     return jsonify(error=e.msg), e.code
 
 
 @app.errorhandler(HTTPException)
 def _http_err(e):
     msg = "The file is too large (8 MB max)." if e.code == 413 else e.description
+    log.info("%s %s -> HTTP %s", request.method, request.path, e.code)
     return (jsonify(error=msg), e.code) if request.path.startswith("/api/") else e
+
+
+@app.errorhandler(Exception)
+def _unhandled(e):
+    log.exception("Unhandled exception on %s %s", request.method, request.path)
+    return jsonify(error="An unexpected error occurred."), 500
 
 
 def db():
@@ -106,13 +133,18 @@ def _close(_):
 def init_db():
     UPLOADS.mkdir(parents=True, exist_ok=True)
     c = sqlite3.connect(DB_PATH)
-    c.executescript(SCHEMA)
-    # migrate existing databases that predate the pincode column
-    cols = {r[1] for r in c.execute("PRAGMA table_info(complaints)")}
-    if "pincode" not in cols:
-        c.execute("ALTER TABLE complaints ADD COLUMN pincode TEXT NOT NULL DEFAULT ''")
-    c.commit()
-    c.close()
+    try:
+        c.executescript(SCHEMA)
+        cols = {r[1] for r in c.execute("PRAGMA table_info(complaints)")}
+        if "pincode" not in cols:
+            c.execute("ALTER TABLE complaints ADD COLUMN pincode TEXT NOT NULL DEFAULT ''")
+        c.commit()
+        log.info("Database initialised at %s", DB_PATH)
+    except sqlite3.Error:
+        log.exception("Failed to initialise database")
+        raise
+    finally:
+        c.close()
 
 
 def now_ms():
@@ -213,7 +245,10 @@ def resolve_pincode(pin):
             raise ValueError
         return lat, lng
     
-    except Exception:        
+    except ApiError:
+        raise
+    except Exception:
+        log.warning("resolve_pincode(%s) failed", pin, exc_info=True)
         raise ApiError("Could not resolve that pincode. Please check and try again.", 422)
 
 
@@ -349,6 +384,7 @@ def create_complaint():
     d.execute("INSERT INTO votes VALUES(?,?,?)", (cid, voter_id(), t))
     log_event(cid, "Complaint registered")
     d.commit()
+    log.info("Complaint created: %s cat=%s area=%s", cid, cat, area)
     return jsonify(id=cid), 201
 
 
@@ -362,6 +398,7 @@ def vote(cid):
         raise ApiError("You have already supported this complaint.", 409)
     log_event(r["id"], "Another citizen supported this complaint")
     db().commit()
+    log.info("Vote recorded on %s", r["id"])
     return jsonify(ok=True)
 
 
@@ -376,9 +413,11 @@ def feedback(cid):
     if yes:
         db().execute("UPDATE complaints SET status='Closed', rating=5, updated=? WHERE id=?", (now_ms(), r["id"]))
         log_event(r["id"], "Citizen confirmed the fix")
+        log.info("Feedback: %s closed by citizen", r["id"])
     else:
         db().execute("UPDATE complaints SET status='In progress', updated=? WHERE id=?", (now_ms(), r["id"]))
         log_event(r["id"], "Citizen reported the problem persists, reopened")
+        log.info("Feedback: %s reopened by citizen", r["id"])
     db().commit()
     return jsonify(ok=True)
 
@@ -402,16 +441,21 @@ def login():
     # compare against a dummy hash when the user is unknown, so timing does not leak usernames
     ok = check_password_hash(s["password_hash"] if s else generate_password_hash("x"), p)
     if not (s and ok):
+        log.warning("Failed login attempt for username=%r from %s", u, request.remote_addr)
         raise ApiError("Incorrect username or password.", 401)
     session.clear()
     session.permanent = True
     session["staff_id"] = s["id"]
+    log.info("Staff login: %s (%s) from %s", s["username"], s["role"], request.remote_addr)
     return jsonify(user={"username": s["username"], "role": s["role"]})
 
 
 @app.post("/api/auth/logout")
 def logout():
+    s = current_staff()
     session.clear()
+    if s:
+        log.info("Staff logout: %s", s["username"])
     return jsonify(ok=True)
 
 
@@ -433,6 +477,7 @@ def change_password():
         raise ApiError("New password must be at least 10 characters.")
     db().execute("UPDATE staff SET password_hash=? WHERE id=?", (generate_password_hash(new), g.staff["id"]))
     db().commit()
+    log.info("Password changed for staff id=%s", g.staff["id"])
     return jsonify(ok=True)
 
 
@@ -453,6 +498,7 @@ def add_staff():
         db().execute("INSERT INTO staff(username,password_hash,role,created) VALUES(?,?,?,?)",
                      (u, generate_password_hash(p), role, now_ms()))
         db().commit()
+        log.info("Staff account created: %s role=%s by admin id=%s", u, role, g.staff["id"])
     except sqlite3.IntegrityError:
         raise ApiError("That username already exists.", 409)
     return jsonify(ok=True), 201
@@ -478,6 +524,7 @@ def update_complaint(cid):
         log_event(r["id"], f"Status changed to {status}", g.staff["id"])
     db().execute("UPDATE complaints SET status=?, dept=?, updated=? WHERE id=?", (status, dept, now_ms(), r["id"]))
     db().commit()
+    log.info("Complaint %s updated by staff %s: status=%s dept=%s", r["id"], g.staff["username"], status, dept)
     return jsonify(ok=True)
 
 
@@ -491,6 +538,7 @@ def after_photo(cid):
     db().execute("UPDATE complaints SET after_photo=?, status='Resolved', updated=? WHERE id=?", (name, now_ms(), r["id"]))
     log_event(r["id"], "After-photo uploaded, marked resolved", g.staff["id"])
     db().commit()
+    log.info("After-photo uploaded for %s by staff %s", r["id"], g.staff["username"])
     return jsonify(ok=True)
 
 
@@ -512,8 +560,11 @@ def export_csv():
 @app.cli.command("init-db")
 def init_db_cmd():
     """Create the SQLite tables and uploads folder."""
-    init_db()
-    click.echo(f"Database ready at {DB_PATH}")
+    try:
+        init_db()
+        click.echo(f"Database ready at {DB_PATH}")
+    except Exception as e:
+        raise click.ClickException(str(e))
 
 
 @app.cli.command("create-staff")
@@ -530,8 +581,11 @@ def create_staff_cmd(username, role, password):
         c.execute("INSERT INTO staff(username,password_hash,role,created) VALUES(?,?,?,?)",
                   (username, generate_password_hash(password), role, now_ms()))
         c.commit()
+        log.info("CLI: created %s account '%s'", role, username)
     except sqlite3.IntegrityError:
         raise click.ClickException("That username already exists.")
+    finally:
+        c.close()
     click.echo(f"Created {role} account '{username}'.")
 
 
@@ -564,7 +618,13 @@ def seed_demo_cmd():
     click.echo("Seeded 5 sample complaints.")
 
 
-init_db()
+try:
+    init_db()
+except Exception:
+    log.exception("Startup init_db failed")
+    raise
+
+log.info("CitySaathi starting — DB=%s UPLOADS=%s", DB_PATH, UPLOADS)
 
 if __name__ == "__main__":
     app.run(debug=os.environ.get("FLASK_DEBUG") == "1")
