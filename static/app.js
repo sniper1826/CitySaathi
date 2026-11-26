@@ -57,6 +57,12 @@ const STRINGS = {
     signin_h: 'Authority sign-in', signin_note: 'For municipal staff only.',
     lbl_user: 'Username', lbl_pass: 'Password', signin_btn: 'Sign in',
     no_photo: 'No photo', support: 'support',
+    uploading: 'Uploading…', after_uploaded: 'After-photo uploaded', view_photo: 'View',
+    dept_signin_h: 'Department sign-in', dept_signin_note: 'For department staff only.',
+    dept_only_err: 'This login is for department accounts only.',
+    dept_dash_h: 'Department dashboard',
+    dept_no_assigned: 'No complaints are currently assigned to your department.',
+    nav_dept: 'Department login',
     cat_sewage: 'Sewage overflow', cat_drain: 'Blocked drain', cat_manhole: 'Manhole / open manhole',
     cat_dirty: 'Dirty water supply', cat_leak: 'Water leakage', cat_water: 'Waterlogging',
     cat_road: 'Pothole / road damage', cat_garbage: 'Garbage collection', cat_light: 'Streetlight not working',
@@ -64,7 +70,7 @@ const STRINGS = {
     cat_health: 'Poor healthcare service', cat_absent: 'Absent official / service', cat_others: 'Others',
   },
   hi: {
-    nav_home: 'होम', nav_report: 'समस्या दर्ज करें', nav_track: 'ट्रैक करें', nav_map: 'सार्वजनिक नक्शा', nav_admin: 'प्राधिकरण डैशबोर्ड',
+    nav_home: 'होम', nav_report: 'समस्या दर्ज करें', nav_track: 'ट्रैक करें', nav_map: 'सार्वजनिक नक्शा', nav_admin: 'प्राधिकरण डैशबोर्ड', nav_dept: 'विभाग लॉगिन',
     hero_h1a: 'दर्ज करें.', hero_h1b: 'ट्रैक करें.', hero_h1c: 'ठीक करें.',
     hero_p: 'CitySaathi नागरिक समस्याओं के लिए आपका पड़ोस साथी है। सीवेज, जल निकासी, पानी और सड़क की समस्याओं को फोटो और स्थान के साथ दर्ज करें, फिर हर शिकायत को ठीक होने तक ट्रैक करें।',
     hero_btn1: 'समस्या दर्ज करें', hero_btn2: 'सार्वजनिक नक्शा देखें',
@@ -114,6 +120,11 @@ const STRINGS = {
     cat_road: 'गड्ढा / सड़क क्षति', cat_garbage: 'कचरा संग्रह', cat_light: 'स्ट्रीटलाइट खराब',
     cat_footpath: 'फुटपाथ क्षति', cat_power: 'बिजली कटौती', cat_bribe: 'रिश्वत / भ्रष्टाचार',
     cat_health: 'खराब स्वास्थ्य सेवा', cat_absent: 'अनुपस्थित अधिकारी / सेवा', cat_others: 'अन्य',
+    dept_signin_h: 'विभाग साइन-इन', dept_signin_note: 'केवल विभागीय कर्मचारियों के लिए।',
+    dept_only_err: 'यह लॉगिन केवल विभाग खातों के लिए है।',
+    dept_dash_h: 'विभाग डैशबोर्ड',
+    dept_no_assigned: 'अभी आपके विभाग को कोई शिकायत नहीं सौंपी गई है।',
+    uploading: 'अपलोड हो रहा है…', after_uploaded: 'बाद की फोटो अपलोड हुई', view_photo: 'देखें',
   },
 };
 
@@ -149,6 +160,8 @@ const day   = 86400000;
 let DB   = [];
 let AUTH = false;
 let WHO  = "";
+let ROLE = "";
+let DEPTNAME = "";
 
 /* ── API helpers ───────────────────────────────────────────── */
 
@@ -169,6 +182,10 @@ const J = (m, b) => ({
 
 async function load() {
   try { DB = await api("/api/complaints"); } catch (e) {}
+  if (AUTH === true && ROLE === "dept") {
+    try { window.DEPT_DB = await api("/api/my-dept-complaints"); }
+    catch (e) { window.DEPT_DB = []; }
+  }
   if (!/^#report/.test(location.hash)) render();
 }
 
@@ -177,8 +194,12 @@ async function checkAuth() {
     const m = await api("/api/auth/me");
     AUTH = !!m.user;
     WHO  = m.user ? m.user.username : "";
+    ROLE = m.user ? (m.user.role || "") : "";
+    DEPTNAME = m.user ? (m.user.dept || "") : "";
   } catch (e) {
     AUTH = false;
+    ROLE = "";
+    DEPTNAME = "";
   }
 }
 
@@ -186,10 +207,11 @@ function save() {}
 
 /* ── Auth UI ───────────────────────────────────────────────── */
 
-function gate() {
+function gate(mode = "admin") {
+  const isDept = mode === "dept";
   return `<div class="card" style="max-width:420px;margin:30px auto">
-    <h2 style="font-size:26px;margin-bottom:4px">${t('signin_h')}</h2>
-    <p class="meta">${t('signin_note')}</p>
+    <h2 style="font-size:26px;margin-bottom:4px">${isDept ? t('dept_signin_h') : t('signin_h')}</h2>
+    <p class="meta">${isDept ? t('dept_signin_note') : t('signin_note')}</p>
     <form id="lf">
       <label for="lu">${t('lbl_user')}</label>
       <input id="lu" autocomplete="username" required>
@@ -201,7 +223,7 @@ function gate() {
   </div>`;
 }
 
-function bindLogin() {
+function bindLogin(mode = "admin") {
   const f = $("#lf");
   if (!f) return;
   f.onsubmit = async e => {
@@ -211,7 +233,14 @@ function bindLogin() {
       const r = await api("/api/auth/login", J("POST", { username: $("#lu").value.trim(), password: $("#lp").value }));
       AUTH = true;
       WHO  = r.user.username;
-      render();
+      ROLE = r.user.role || "";
+      DEPTNAME = r.user.dept || "";
+      if (mode === "dept" && ROLE !== "dept") {
+        m.textContent = t('dept_only_err');
+        await logout();
+        return;
+      }
+      await load();
     } catch (er) {
       m.textContent = er.message;
     }
@@ -222,6 +251,8 @@ async function logout() {
   try { await api("/api/auth/logout", J("POST")); } catch (e) {}
   AUTH = false;
   WHO  = "";
+  ROLE = "";
+  DEPTNAME = "";
   render();
 }
 
@@ -256,8 +287,10 @@ const catLabel = c => t(catKey[c]) || c;
 /* ── Shared partials ───────────────────────────────────────── */
 
 function thumb(c) {
-  return c.photo
-    ? `<img class="thumb" src="${c.photo}" alt="Photo of ${esc(c.cat)}">`
+  // Show after-photo once available (it means the complaint is resolved), else before-photo
+  const src = c.after || c.photo;
+  return src
+    ? `<img class="thumb" src="${src}" alt="Photo of ${esc(c.cat)}">`
     : `<div class="thumb">${t('no_photo')}</div>`;
 }
 
@@ -438,6 +471,57 @@ function detail(c) {
     ${c.status === "Closed" && c.rating ? `<p class="meta">${t('citizen_confirmed')}</p>` : ""}`;
 }
 
+/* ── Department dashboard ──────────────────────────────────── */
+
+V.dept = () => {
+  if (AUTH !== true || ROLE !== "dept") return gate("dept");
+
+  // dept complaints come straight from the API (filtered server-side)
+  const mine = window.DEPT_DB || [];
+  const q    = window.DF || { st: "" };
+  const list = mine.filter(c => !q.st || c.status === q.st);
+  const by   = n => mine.filter(c => c.status === n).length;
+  const mopen  = mine.filter(open).length;
+  const moerd   = mine.filter(overdue).length;
+  const mres    = by("Resolved") + by("Closed");
+
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap">
+    <h2 style="font-size:28px">${t('dept_dash_h')} — ${esc(DEPTNAME)}</h2>
+    <span class="meta">${t('signed_as')} ${esc(WHO)} <button class="sec sm" onclick="logout()">${t('signout')}</button></span>
+  </div>
+  <div class="stats" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+    <div class="stat"><b>${mine.length}</b><span>${t('total')}</span></div>
+    <div class="stat"><b>${mopen}</b><span>${t('pending')}</span></div>
+    <div class="stat"><b>${moerd}</b><span>${t('overdue_lbl')}</span></div>
+    <div class="stat"><b>${mres}</b><span>${t('stat3')}</span></div>
+  </div>
+  <div class="card">
+    <div class="toolbar">
+      <select id="dfs" aria-label="Status">
+        <option value="">${t('all_statuses')}</option>
+        ${FLOW.map(s => `<option ${q.st === s ? "selected" : ""}>${s}</option>`).join("")}
+      </select>
+    </div>
+    ${list.map(c => card(c, `
+      <div class="meta">${t('priority_lbl')} <b>${plabel(c)}</b></div>
+      <select onchange="deptUpd('${c.id}','status',this.value)" aria-label="Status">
+        ${FLOW.map(s => `<option ${c.status === s ? "selected" : ""}>${s}</option>`).join("")}
+      </select>
+      ${c.after
+        ? `<div class="meta" style="margin-top:6px">✓ ${t('after_uploaded')} <a href="${c.after}" target="_blank" rel="noopener" style="color:var(--blue)">${t('view_photo')}</a></div>`
+        : `<label class="meta" style="font-weight:500;margin:6px 0 0">${t('after_photo')} <input type="file" accept="image/*" onchange="deptAfter('${c.id}',this.files[0],this)"></label>`
+      }
+    `)).join("") || `<p>${t('dept_no_assigned')}</p>`}
+  </div>
+  <p class="foot">${t('staff_foot')}</p>`;
+};
+
+V.dept.init = () => {
+  if (AUTH !== true || ROLE !== "dept") { bindLogin("dept"); return; }
+  const el = $("#dfs");
+  if (el) el.onchange = () => { window.DF = { st: el.value }; render(); };
+};
+
 V.map = () => {
   if (!DB.length) return `<h2 style="font-size:28px;margin-bottom:14px">${t('map_h')}</h2><div class="card"><p>${t('no_complaints')}</p></div>`;
 
@@ -469,7 +553,7 @@ V.map = () => {
 };
 
 V.admin = () => {
-  if (AUTH !== true) return gate();
+  if (AUTH !== true || ROLE === "dept") return gate("admin");
 
   const q    = window.AF || { cat: "", st: "", ar: "" };
   const list = DB
@@ -478,44 +562,47 @@ V.admin = () => {
   const by = n => DB.filter(c => c.status === n).length;
 
   return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px">
-    <h2 style="font-size:28px">Authority dashboard</h2>
-    <span class="meta">Signed in as ${esc(WHO)} <button class="sec sm" onclick="logout()">Sign out</button></span>
+    <h2 style="font-size:28px">${t('admin_h')}</h2>
+    <span class="meta">${t('signed_as')} ${esc(WHO)} <button class="sec sm" onclick="logout()">${t('signout')}</button></span>
   </div>
   <div class="stats" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
-    <div class="stat"><b>${DB.length}</b><span>Total</span></div>
-    <div class="stat"><b>${DB.filter(open).length}</b><span>Pending</span></div>
-    <div class="stat"><b>${DB.filter(overdue).length}</b><span>Overdue (escalated)</span></div>
-    <div class="stat"><b>${by("Resolved") + by("Closed")}</b><span>Resolved</span></div>
+    <div class="stat"><b>${DB.length}</b><span>${t('total')}</span></div>
+    <div class="stat"><b>${DB.filter(open).length}</b><span>${t('pending')}</span></div>
+    <div class="stat"><b>${DB.filter(overdue).length}</b><span>${t('overdue_lbl')}</span></div>
+    <div class="stat"><b>${by("Resolved") + by("Closed")}</b><span>${t('stat3')}</span></div>
   </div>
   <div class="card">
     <div class="toolbar">
       <select id="fc" aria-label="Category">
-        <option value="">All categories</option>
+        <option value="">${t('all_cats')}</option>
         ${Object.keys(CATS).map(c => `<option ${q.cat === c ? "selected" : ""}>${c}</option>`).join("")}
       </select>
       <select id="fs" aria-label="Status">
-        <option value="">All statuses</option>
+        <option value="">${t('all_statuses')}</option>
         ${FLOW.map(s => `<option ${q.st === s ? "selected" : ""}>${s}</option>`).join("")}
       </select>
-      <input id="fa" style="width:200px" placeholder="Filter by area" value="${esc(q.ar)}" aria-label="Area">
-      <button class="sec" onclick="exportCSV()">Export CSV</button>
+      <input id="fa" style="width:200px" placeholder="${t('filter_area')}" value="${esc(q.ar)}" aria-label="Area">
+      <button class="sec" onclick="exportCSV()">${t('export_csv')}</button>
     </div>
     ${list.map(c => card(c, `
-      <div class="meta">Priority <b>${plabel(c)}</b></div>
+      <div class="meta">${t('priority_lbl')} <b>${plabel(c)}</b></div>
       <select onchange="upd('${c.id}','dept',this.value)" aria-label="Department">
         ${DEPTS.map(d => `<option ${c.dept === d ? "selected" : ""}>${d}</option>`).join("")}
       </select>
       <select style="margin-top:6px" onchange="upd('${c.id}','status',this.value)" aria-label="Status">
         ${FLOW.map(s => `<option ${c.status === s ? "selected" : ""}>${s}</option>`).join("")}
       </select>
-      <label class="meta" style="font-weight:500;margin:6px 0 0">After photo <input type="file" accept="image/*" onchange="after('${c.id}',this.files[0])"></label>
-    `)).join("") || "<p>No complaints match.</p>"}
+      ${c.after
+        ? `<div class="meta" style="margin-top:6px">✓ ${t('after_uploaded')} <a href="${c.after}" target="_blank" rel="noopener" style="color:var(--blue)">${t('view_photo')}</a></div>`
+        : `<label class="meta" style="font-weight:500;margin:6px 0 0">${t('after_photo')} <input type="file" accept="image/*" onchange="after('${c.id}',this.files[0],this)"></label>`
+      }
+    `)).join("") || `<p>${t('no_match')}</p>`}
   </div>
-  <p class="foot">Staff sessions are managed by the server.</p>`;
+  <p class="foot">${t('staff_foot')}</p>`;
 };
 
 V.admin.init = () => {
-  if (AUTH !== true) { bindLogin(); return; }
+  if (AUTH !== true || ROLE === "dept") { bindLogin("admin"); return; }
   const go = () => { window.AF = { cat: $("#fc").value, st: $("#fs").value, ar: $("#fa").value }; render(); };
   $("#fc").onchange = go;
   $("#fs").onchange = go;
@@ -537,15 +624,48 @@ function upd(id, f, v) {
   act("/api/complaints/" + id, J("PATCH", { [f]: v }));
 }
 
-function after(id, file) {
+function after(id, file, inputEl) {
   if (AUTH !== true || !file) return;
+  // Show uploading state on the label
+  const label = inputEl ? inputEl.closest("label") : null;
+  if (label) label.innerHTML = `<span class="meta">${t('uploading')}</span>`;
   const fd = new FormData();
   fd.append("photo", file);
-  act("/api/complaints/" + id + "/after", { method: "POST", body: fd });
+  api("/api/complaints/" + id + "/after", { method: "POST", body: fd })
+    .then(() => {
+      if (label) label.innerHTML = `<span class="ok-inline">✓ ${t('after_uploaded')}</span>`;
+      load();
+    })
+    .catch(e => {
+      if (label) label.innerHTML = `<span class="meta">${esc(e.message)}</span>`;
+      alert(e.message);
+    });
 }
 
 function feedback(id, yes) {
   act("/api/complaints/" + id + "/feedback", J("POST", { resolved: yes }));
+}
+
+function deptUpd(id, field, val) {
+  if (AUTH !== true || ROLE !== "dept") return;
+  act("/api/complaints/" + id, J("PATCH", { [field]: val }));
+}
+
+function deptAfter(id, file, inputEl) {
+  if (AUTH !== true || ROLE !== "dept" || !file) return;
+  const label = inputEl ? inputEl.closest("label") : null;
+  if (label) label.innerHTML = `<span class="meta">${t('uploading')}</span>`;
+  const fd = new FormData();
+  fd.append("photo", file);
+  api("/api/complaints/" + id + "/after", { method: "POST", body: fd })
+    .then(() => {
+      if (label) label.innerHTML = `<span class="ok-inline">✓ ${t('after_uploaded')}</span>`;
+      load();
+    })
+    .catch(e => {
+      if (label) label.innerHTML = `<span class="meta">${esc(e.message)}</span>`;
+      alert(e.message);
+    });
 }
 
 function exportCSV() {
@@ -559,7 +679,7 @@ function render() {
   const v = V[r] || V.home;
   $("#app").innerHTML = v(arg ? decodeURIComponent(arg) : "");
   (V[r] || {}).init && V[r].init();
-  const navKeys = ["nav_home", "nav_report", "nav_track", "nav_map", "nav_admin"];
+  const navKeys = ["nav_home", "nav_report", "nav_track", "nav_map", "nav_admin", "nav_dept"];
   document.querySelectorAll("#nav a").forEach((a, i) => {
     a.classList.toggle("on", a.getAttribute("href") === "#" + (V[r] ? r : "home"));
     if (navKeys[i]) a.textContent = t(navKeys[i]);

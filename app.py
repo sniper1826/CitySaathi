@@ -69,7 +69,8 @@ app.config.update(
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS staff(
   id INTEGER PRIMARY KEY, username TEXT UNIQUE NOT NULL COLLATE NOCASE,
-  password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'staff' CHECK(role IN('staff','admin')),
+  password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'staff' CHECK(role IN('staff','admin','dept')),
+  dept TEXT NOT NULL DEFAULT '',
   created INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS complaints(
   id TEXT PRIMARY KEY, category TEXT NOT NULL, other TEXT NOT NULL DEFAULT '',
@@ -138,6 +139,28 @@ def init_db():
         cols = {r[1] for r in c.execute("PRAGMA table_info(complaints)")}
         if "pincode" not in cols:
             c.execute("ALTER TABLE complaints ADD COLUMN pincode TEXT NOT NULL DEFAULT ''")
+        staff_cols = {r[1] for r in c.execute("PRAGMA table_info(staff)")}
+        if "dept" not in staff_cols:
+            c.execute("ALTER TABLE staff ADD COLUMN dept TEXT NOT NULL DEFAULT ''")
+        # widen the role check constraint by recreating the table if needed
+        try:
+            c.execute("INSERT INTO staff(username,password_hash,role,dept,created) "
+                      "VALUES('__probe__','x','dept','',0)")
+            c.execute("DELETE FROM staff WHERE username='__probe__'")
+        except (sqlite3.IntegrityError, sqlite3.OperationalError):
+            # old CHECK constraint doesn't allow 'dept' — rebuild the table
+            c.executescript("""
+                ALTER TABLE staff RENAME TO staff_old;
+                CREATE TABLE staff(
+                  id INTEGER PRIMARY KEY, username TEXT UNIQUE NOT NULL COLLATE NOCASE,
+                  password_hash TEXT NOT NULL,
+                  role TEXT NOT NULL DEFAULT 'staff' CHECK(role IN('staff','admin','dept')),
+                  dept TEXT NOT NULL DEFAULT '',
+                  created INTEGER NOT NULL);
+                INSERT INTO staff(id,username,password_hash,role,dept,created)
+                  SELECT id,username,password_hash,role,'',created FROM staff_old;
+                DROP TABLE staff_old;
+            """)
         c.commit()
         log.info("Database initialised at %s", DB_PATH)
     except sqlite3.Error:
@@ -192,17 +215,21 @@ def current_staff():
     sid = session.get("staff_id")
     if not sid:
         return None
-    return db().execute("SELECT id,username,role FROM staff WHERE id=?", (sid,)).fetchone()
+    return db().execute("SELECT id,username,role,dept FROM staff WHERE id=?", (sid,)).fetchone()
 
 
 def staff_required(role=None):
+    """Require a logged-in staff member.
+    role=None    → any authenticated staff (staff / admin / dept)
+    role='admin' → only admins
+    """
     def deco(f):
         @wraps(f)
         def w(*a, **k):
             s = current_staff()
             if not s:
                 raise ApiError("Staff sign-in required.", 401)
-            if role and s["role"] != role:
+            if role == "admin" and s["role"] != "admin":
                 raise ApiError("Admin access required.", 403)
             g.staff = s
             return f(*a, **k)
@@ -447,7 +474,7 @@ def login():
     session.permanent = True
     session["staff_id"] = s["id"]
     log.info("Staff login: %s (%s) from %s", s["username"], s["role"], request.remote_addr)
-    return jsonify(user={"username": s["username"], "role": s["role"]})
+    return jsonify(user={"username": s["username"], "role": s["role"], "dept": s["dept"]})
 
 
 @app.post("/api/auth/logout")
@@ -462,7 +489,7 @@ def logout():
 @app.get("/api/auth/me")
 def me():
     s = current_staff()
-    return jsonify(user={"username": s["username"], "role": s["role"]} if s else None)
+    return jsonify(user={"username": s["username"], "role": s["role"], "dept": s["dept"]} if s else None)
 
 
 @app.post("/api/auth/password")
@@ -484,7 +511,7 @@ def change_password():
 @app.get("/api/staff")
 @staff_required("admin")
 def list_staff():
-    return jsonify([dict(r) for r in db().execute("SELECT id,username,role,created FROM staff ORDER BY id")])
+    return jsonify([dict(r) for r in db().execute("SELECT id,username,role,dept,created FROM staff ORDER BY id")])
 
 
 @app.post("/api/staff")
@@ -492,16 +519,30 @@ def list_staff():
 def add_staff():
     j = request.get_json(silent=True) or {}
     u, p, role = str(j.get("username", "")).strip(), str(j.get("password", "")), j.get("role", "staff")
-    if not u or len(p) < 10 or role not in ("staff", "admin"):
+    dept = str(j.get("dept", "")).strip()
+    if not u or len(p) < 10 or role not in ("staff", "admin", "dept"):
         raise ApiError("Username, a password of 10+ characters and a valid role are required.")
+    if role == "dept" and dept not in DEPTS:
+        raise ApiError("A valid department name is required for dept role.")
     try:
-        db().execute("INSERT INTO staff(username,password_hash,role,created) VALUES(?,?,?,?)",
-                     (u, generate_password_hash(p), role, now_ms()))
+        db().execute("INSERT INTO staff(username,password_hash,role,dept,created) VALUES(?,?,?,?,?)",
+                     (u, generate_password_hash(p), role, dept if role == "dept" else "", now_ms()))
         db().commit()
-        log.info("Staff account created: %s role=%s by admin id=%s", u, role, g.staff["id"])
+        log.info("Staff account created: %s role=%s dept=%s by admin id=%s", u, role, dept, g.staff["id"])
     except sqlite3.IntegrityError:
         raise ApiError("That username already exists.", 409)
     return jsonify(ok=True), 201
+
+
+@app.get("/api/my-dept-complaints")
+@staff_required()
+def my_dept_complaints():
+    """Return complaints assigned to the logged-in dept user's department."""
+    if g.staff["role"] != "dept":
+        raise ApiError("Only department accounts can use this endpoint.", 403)
+    dept = g.staff["dept"]
+    rows = db().execute(SELECT + "WHERE c.dept=? ORDER BY c.created DESC", (dept,)).fetchall()
+    return jsonify(to_json(rows))
 
 
 @app.patch("/api/complaints/<cid>")
@@ -509,6 +550,12 @@ def add_staff():
 def update_complaint(cid):
     r = get_or_404(cid.upper())
     j = request.get_json(silent=True) or {}
+    # Department users can only modify complaints in their own dept
+    if g.staff["role"] == "dept":
+        if r["dept"] != g.staff["dept"]:
+            raise ApiError("You can only update complaints assigned to your department.", 403)
+        if "dept" in j:
+            raise ApiError("Department accounts cannot reassign complaints.", 403)
     status, dept = r["status"], r["dept"]
     if "dept" in j:
         if j["dept"] not in DEPTS:
@@ -569,24 +616,27 @@ def init_db_cmd():
 
 @app.cli.command("create-staff")
 @click.option("--username", prompt=True)
-@click.option("--role", type=click.Choice(["staff", "admin"]), default="staff")
+@click.option("--role", type=click.Choice(["staff", "admin", "dept"]), default="staff")
+@click.option("--dept", default="", help="Department name (required for --role dept)")
 @click.password_option(confirmation_prompt=True)
-def create_staff_cmd(username, role, password):
-    """Add a staff or admin account."""
+def create_staff_cmd(username, role, dept, password):
+    """Add a staff, admin or department account."""
     init_db()
     if len(password) < 10:
         raise click.ClickException("Password must be at least 10 characters.")
+    if role == "dept" and dept not in DEPTS:
+        raise click.ClickException(f"Department must be one of: {', '.join(d for d in DEPTS if d != 'Unassigned')}")
     c = sqlite3.connect(DB_PATH)
     try:
-        c.execute("INSERT INTO staff(username,password_hash,role,created) VALUES(?,?,?,?)",
-                  (username, generate_password_hash(password), role, now_ms()))
+        c.execute("INSERT INTO staff(username,password_hash,role,dept,created) VALUES(?,?,?,?,?)",
+                  (username, generate_password_hash(password), role, dept if role == "dept" else "", now_ms()))
         c.commit()
-        log.info("CLI: created %s account '%s'", role, username)
+        log.info("CLI: created %s account '%s' dept='%s'", role, username, dept)
     except sqlite3.IntegrityError:
         raise click.ClickException("That username already exists.")
     finally:
         c.close()
-    click.echo(f"Created {role} account '{username}'.")
+    click.echo(f"Created {role} account '{username}'" + (f" for {dept}." if role == "dept" else "."))
 
 
 @app.cli.command("seed-demo")

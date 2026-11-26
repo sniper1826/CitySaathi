@@ -486,6 +486,12 @@ button.sm   { padding: 6px 12px; font-size: 14px;              }
   margin-top: 14px;
 }
 
+.ok-inline {
+  color: var(--ok);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 /* ── Map ───────────────────────────────────────────────────── */
 
 .map {
