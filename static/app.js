@@ -1,3 +1,39 @@
+/* ── Hamburger menu ───────────────────────────────────────── */
+
+function toggleMenu() {
+  const nav     = document.getElementById('nav');
+  const burger  = document.getElementById('burger');
+  const overlay = document.getElementById('overlay');
+  const open    = nav.classList.toggle('open');
+  burger.classList.toggle('open', open);
+  burger.setAttribute('aria-expanded', String(open));
+  burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  if (overlay) overlay.classList.toggle('visible', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+function closeMenu() {
+  const nav     = document.getElementById('nav');
+  const burger  = document.getElementById('burger');
+  const overlay = document.getElementById('overlay');
+  nav.classList.remove('open');
+  burger.classList.remove('open');
+  burger.setAttribute('aria-expanded', 'false');
+  burger.setAttribute('aria-label', 'Open menu');
+  if (overlay) overlay.classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+// Close menu when a nav link is clicked (also handles hash navigation)
+document.querySelectorAll('#nav a').forEach(a => {
+  a.addEventListener('click', closeMenu);
+});
+
+// Close on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeMenu();
+});
+
 /* ── Language ─────────────────────────────────────────────── */
 
 let LANG = localStorage.getItem('lang') || 'en';
@@ -675,6 +711,7 @@ function exportCSV() {
 /* ── Router ────────────────────────────────────────────────── */
 
 function render() {
+  closeMenu();
   const [r, arg] = (location.hash.slice(1) || "home").split("/");
   const v = V[r] || V.home;
   $("#app").innerHTML = v(arg ? decodeURIComponent(arg) : "");
