@@ -34,7 +34,58 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeMenu();
 });
 
-/* ── Language ─────────────────────────────────────────────── */
+/* ── Leaflet loader (dynamic, multi-CDN fallback) ─────────── */
+
+const LEAFLET_CDNS = [
+  {
+    css: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+    js:  "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+  },
+  {
+    css: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
+    js:  "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js",
+  },
+  {
+    css: "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css",
+    js:  "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js",
+  },
+];
+
+let _leafletPromise = null;
+
+function loadLeaflet() {
+  if (_leafletPromise) return _leafletPromise;
+  if (typeof L !== "undefined") return (_leafletPromise = Promise.resolve());
+
+  _leafletPromise = (async () => {
+    for (const cdn of LEAFLET_CDNS) {
+      try {
+        await new Promise((resolve, reject) => {
+          // Inject CSS link (idempotent: skip if already present)
+          if (!document.querySelector(`link[href="${cdn.css}"]`)) {
+            const link  = document.createElement("link");
+            link.rel    = "stylesheet";
+            link.href   = cdn.css;
+            document.head.appendChild(link);
+          }
+          // Inject JS script
+          const script  = document.createElement("script");
+          script.src    = cdn.js;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+        // Verify the global landed correctly
+        if (typeof L !== "undefined") return;
+      } catch (_) { /* try next CDN */ }
+    }
+    throw new Error("Could not load Leaflet from any CDN. Check your internet connection.");
+  })();
+
+  return _leafletPromise;
+}
+
+
 
 let LANG = localStorage.getItem('lang') || 'en';
 
@@ -82,8 +133,8 @@ const STRINGS = {
     history_h: 'History', before: 'Before', after_lbl: 'After',
     fixed_q: 'Is it really fixed?', yes_confirm: 'Yes, confirm', no_reopen: 'No, reopen', citizen_confirmed: 'Citizen confirmed the fix.',
     map_h: 'Public complaint map', no_complaints: 'No complaints yet.',
-    map_note: 'Schematic map of reported spots. Larger dots have more support. Red: in progress or assigned, yellow: newly reported, green: resolved. Click a dot to open it.',
-    gmaps: 'Open this area in Google Maps', gmaps_dot: 'Open in Google Maps',
+    map_note: 'Live map of reported spots. Larger circles have more support. <span class="leg-dot" style="background:#ff8a80"></span> In progress / Assigned &nbsp; <span class="leg-dot" style="background:#ff9a2e"></span> Newly reported &nbsp; <span class="leg-dot" style="background:#4cc86a"></span> Resolved. Click a marker to open it.',
+    no_coords: 'Location not available for this complaint.',
     all_complaints: 'All complaints',
     admin_h: 'Authority dashboard', signed_as: 'Signed in as', signout: 'Sign out',
     total: 'Total', pending: 'Pending', overdue_lbl: 'Overdue (escalated)',
@@ -140,8 +191,8 @@ const STRINGS = {
     history_h: 'इतिहास', before: 'पहले', after_lbl: 'बाद में',
     fixed_q: 'क्या यह सच में ठीक हो गया?', yes_confirm: 'हाँ, पुष्टि करें', no_reopen: 'नहीं, फिर खोलें', citizen_confirmed: 'नागरिक ने सुधार की पुष्टि की।',
     map_h: 'सार्वजनिक शिकायत नक्शा', no_complaints: 'अभी कोई शिकायत नहीं।',
-    map_note: 'दर्ज स्थानों का模式 नक्शा। बड़े बिंदुओं को अधिक समर्थन है। लाल: प्रगति में, पीला: नया दर्ज, हरा: हल हुआ। खोलने के लिए बिंदु पर क्लिक करें।',
-    gmaps: 'इस क्षेत्र को Google Maps में खोलें', gmaps_dot: 'Google Maps में खोलें',
+    map_note: 'दर्ज स्थानों का लाइव नक्शा। बड़े वृत्तों को अधिक समर्थन है। <span class="leg-dot" style="background:#ff8a80"></span> प्रगति में / नियत &nbsp; <span class="leg-dot" style="background:#ff9a2e"></span> नया दर्ज &nbsp; <span class="leg-dot" style="background:#4cc86a"></span> हल हुआ। खोलने के लिए मार्कर पर क्लिक करें।',
+    no_coords: 'इस शिकायत के लिए स्थान उपलब्ध नहीं है।',
     all_complaints: 'सभी शिकायतें',
     admin_h: 'प्राधिकरण डैशबोर्ड', signed_as: 'साइन इन:', signout: 'साइन आउट',
     total: 'कुल', pending: 'लंबित', overdue_lbl: 'अतिदेय (एस्केलेटेड)',
@@ -198,6 +249,7 @@ let AUTH = false;
 let WHO  = "";
 let ROLE = "";
 let DEPTNAME = "";
+let CONFIG = {};
 
 /* ── API helpers ───────────────────────────────────────────── */
 
@@ -237,6 +289,10 @@ async function checkAuth() {
     ROLE = "";
     DEPTNAME = "";
   }
+}
+
+async function loadConfig() {
+  try { CONFIG = await api("/api/config"); } catch (e) { CONFIG = {}; }
 }
 
 function save() {}
@@ -295,7 +351,7 @@ async function logout() {
 /* ── Boot ──────────────────────────────────────────────────── */
 
 (async () => {
-  await checkAuth();
+  await Promise.all([checkAuth(), loadConfig()]);
   await load();
   setInterval(() => {
     if (!/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) load();
@@ -561,31 +617,87 @@ V.dept.init = () => {
 V.map = () => {
   if (!DB.length) return `<h2 style="font-size:28px;margin-bottom:14px">${t('map_h')}</h2><div class="card"><p>${t('no_complaints')}</p></div>`;
 
-  const f  = [...DB];
-  const la = f.map(c => c.lat);
-  const ln = f.map(c => c.lng);
-  const a  = Math.min(...la) - .004, b = Math.max(...la) + .004;
-  const x  = Math.min(...ln) - .004, y = Math.max(...ln) + .004;
-
   return `<h2 style="font-size:28px;margin-bottom:14px">${t('map_h')}</h2>
-    <div class="card">
-      <div class="map" id="m">
-        ${f.map(c => {
-          const r = 10 + Math.min(c.votes, 8) * 3;
-          return `<div class="dot ${c.status.split(" ")[0]}" role="button" tabindex="0"
-            style="left:${(c.lng - x) / (y - x) * 100}%;top:${100 - (c.lat - a) / (b - a) * 100}%;width:${r}px;height:${r}px"
-            title="${esc(c.cat)} · ${esc(c.area)} · ${c.votes} ${t('support')}"
-            onclick="location.hash='track/${c.id}'"></div>`;
-        }).join("")}
-      </div>
-      <p class="meta">${t('map_note')}
-        <a href="https://www.google.com/maps?q=${((a + b) / 2).toFixed(5)},${((x + y) / 2).toFixed(5)}&z=13" target="_blank" rel="noopener" style="color:var(--blue)">${t('gmaps')}</a>.
-      </p>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div id="leaflet-map"></div>
     </div>
+    <p class="meta" style="margin-top:10px;padding:0 4px">${t('map_note')}</p>
     <div class="card" style="margin-top:20px">
       <h3>${t('all_complaints')}</h3>
-      ${DB.map(c => card(c, `<button class="sec sm" onclick="vote('${c.id}')">▲ ${c.votes}</button><a href="https://www.google.com/maps?q=${c.lat},${c.lng}" target="_blank" rel="noopener" style="display:block;margin-top:6px;font-size:14px;color:var(--blue)">${t('gmaps_dot')}</a>`)).join("")}
+      ${DB.map(c => card(c, `<button class="sec sm" onclick="vote('${c.id}')">▲ ${c.votes}</button>`)).join("")}
     </div>`;
+};
+
+V.map.init = async () => {
+  const mapDiv = document.getElementById("leaflet-map");
+  if (!mapDiv) return;
+
+  // Show a loading indicator while Leaflet fetches
+  mapDiv.innerHTML = `<div class="map-loading">Loading map…</div>`;
+
+  try {
+    await loadLeaflet();
+  } catch (err) {
+    mapDiv.innerHTML = `<div class="map-loading map-err">⚠️ ${esc(err.message)}</div>`;
+    return;
+  }
+
+  // Clear the loading indicator — Leaflet needs an empty div
+  mapDiv.innerHTML = "";
+
+  const pts = DB.filter(c => c.lat && c.lng);
+  if (!pts.length) {
+    mapDiv.innerHTML = `<div class="map-loading">${t('no_coords')}</div>`;
+    return;
+  }
+
+  const avgLat = pts.reduce((s, c) => s + c.lat, 0) / pts.length;
+  const avgLng = pts.reduce((s, c) => s + c.lng, 0) / pts.length;
+
+  const map = L.map(mapDiv, { zoomControl: true }).setView([avgLat, avgLng], 13);
+
+  // CARTO Voyager basemap — uses API key from server config
+  const key = CONFIG.carto_api_key || "";
+  L.tileLayer(
+    `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${key}`,
+    {
+      subdomains:  "abcd",
+      maxZoom:     19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+    }
+  ).addTo(map);
+
+  // Colour by status
+  const colour = c => {
+    if (c.status === "Resolved" || c.status === "Closed") return "#4cc86a";
+    if (c.status === "Reported")                          return "#ff9a2e";
+    return "#ff8a80"; // Assigned / In progress
+  };
+
+  // Radius grows with vote count
+  const radius = c => 8 + Math.min(c.votes, 10) * 2;
+
+  pts.forEach(c => {
+    L.circleMarker([c.lat, c.lng], {
+      radius:      radius(c),
+      fillColor:   colour(c),
+      color:       "#ffffff",
+      weight:      2,
+      opacity:     1,
+      fillOpacity: 0.88,
+    })
+    .bindPopup(`
+      <b style="font-size:14px">${esc(c.cat)}${c.other ? ": " + esc(c.other) : ""}</b><br>
+      <span style="font-size:12px;color:#555">${c.id} · ${esc(c.area)}</span><br>
+      <span style="font-size:12px;color:#555">▲ ${c.votes} support · ${c.status}</span><br>
+      <a href="#track/${c.id}" style="font-size:13px;font-weight:600;color:#1a73e8">View details →</a>
+    `, { maxWidth: 220 })
+    .addTo(map);
+  });
+
+  if (pts.length > 1) {
+    map.fitBounds(pts.map(c => [c.lat, c.lng]), { padding: [40, 40], maxZoom: 15 });
+  }
 };
 
 V.admin = () => {

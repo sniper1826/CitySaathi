@@ -514,6 +514,7 @@ button {
   font: 700 15px Hind, sans-serif;
   border: 0;
   border-radius: 10px;
+  margin:5px;
   padding: 11px 20px;
   cursor: pointer;
   background: var(--grad-main);
@@ -660,54 +661,45 @@ button.sm { padding: 7px 14px; font-size: 14px; }
   font-weight: 600;
 }
 
-/* ── Map ───────────────────────────────────────────────────── */
+/* ── Leaflet map container ──────────────────────────────────── */
 
-.map {
-  position: relative;
-  height: 420px;
-  border-radius: 14px;
-  border: 1px solid rgba(34, 228, 255, .25);
-  background:
-    repeating-linear-gradient(0deg,  transparent 0 59px, rgba(120, 160, 255, .12) 59px 60px),
-    repeating-linear-gradient(90deg, transparent 0 59px, rgba(120, 160, 255, .12) 59px 60px),
-    radial-gradient(700px 400px at 30% 20%, rgba(34, 228, 255, .07), transparent 70%),
-    #0a1024;
-  overflow: hidden;
-  box-shadow: inset 0 0 60px rgba(34, 228, 255, .05), 0 10px 30px rgba(0, 0, 0, .4);
+#leaflet-map {
+  height: 480px;
+  width: 100%;
+  border-radius: 18px;
+  display: block;
 }
 
-.dot {
-  position: absolute;
-  transform: translate(-50%, -50%);
+.map-loading {
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mute);
+  font-size: 15px;
+}
+
+.map-err { color: var(--bad); }
+
+/* Legend dot used inline in map_note string */
+.leg-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  background: var(--bad);
-  border: 2px solid #fff;
-  cursor: pointer;
-  opacity: .9;
-  box-shadow: 0 0 10px rgba(255, 138, 128, .8);
-  animation: dotpulse 2.4s ease-in-out infinite;
+  vertical-align: middle;
+  border: 1px solid rgba(255,255,255,.4);
+  margin-right: 2px;
 }
 
-@keyframes dotpulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 138, 128, .6); }
-  50%      { box-shadow: 0 0 0 8px rgba(255, 138, 128, 0); }
+/* Make Leaflet popup text readable on the dark theme */
+.leaflet-popup-content-wrapper {
+  border-radius: 10px !important;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35) !important;
 }
 
-.dot.Resolved,
-.dot.Closed  {
-  background: var(--ok);
-  box-shadow: 0 0 10px rgba(76, 200, 106, .8);
-  animation-name: dotpulse-ok;
-}
-
-@keyframes dotpulse-ok {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(76, 200, 106, .6); }
-  50%      { box-shadow: 0 0 0 8px rgba(76, 200, 106, 0); }
-}
-
-.dot.Reported {
-  background: var(--gold);
-  box-shadow: 0 0 10px rgba(255, 154, 46, .8);
+@media (max-width: 600px) {
+  #leaflet-map { height: 340px; }
 }
 
 /* ── Timeline ──────────────────────────────────────────────── */

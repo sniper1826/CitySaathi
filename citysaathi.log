@@ -1,0 +1,377 @@
+2026-11-26 20:58:09 INFO citysaathi: Database initialised at C:\Users\himan\Projects\CitySaathi\citysaathi.db
+2026-11-26 20:58:09 INFO citysaathi: CitySaathi starting — DB=C:\Users\himan\Projects\CitySaathi\citysaathi.db UPLOADS=C:\Users\himan\Projects\CitySaathi\uploads
+2026-11-26 20:58:09 INFO werkzeug: WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+2026-11-26 20:58:09 INFO werkzeug: Press CTRL+C to quit
+2026-11-26 20:58:33 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:33] "GET / HTTP/1.1" 200 -
+2026-11-26 20:58:33 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:33] "GET /style.css HTTP/1.1" 200 -
+2026-11-26 20:58:33 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:33] "GET /logo_head.png HTTP/1.1" 304 -
+2026-11-26 20:58:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:34] "GET /app.js HTTP/1.1" 200 -
+2026-11-26 20:58:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:34] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 20:58:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:34] "GET /logo1.png HTTP/1.1" 304 -
+2026-11-26 20:58:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:34] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 20:58:37 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 20:58:37 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:37] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 20:58:57 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:57] "GET /style.css HTTP/1.1" 304 -
+2026-11-26 20:58:58 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 20:58:58 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:58:58] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+2026-11-26 20:59:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:59:34] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 20:59:34 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 20:59:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 20:59:34] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:00:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:00:34] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:00:34 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:00:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:00:34] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:01:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:01:34] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:01:34 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:01:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:01:34] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:02:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:02:34] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:02:34 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:02:34 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:02:34] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:03:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:24] "GET / HTTP/1.1" 200 -
+2026-11-26 21:03:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:24] "GET /style.css HTTP/1.1" 200 -
+2026-11-26 21:03:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:24] "GET /logo_head.png HTTP/1.1" 304 -
+2026-11-26 21:03:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:24] "GET /app.js HTTP/1.1" 200 -
+2026-11-26 21:03:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:24] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:03:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:24] "GET /favicon.ico HTTP/1.1" 304 -
+2026-11-26 21:03:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:24] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:03:24 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:03:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:24] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:03:24 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:03:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:24] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+2026-11-26 21:03:39 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:03:39 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:39] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:03:49 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:03:49 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:03:49] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:04:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:04:24] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:04:25 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:04:25 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:04:25] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:05:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:05:24] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:05:24 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:05:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:05:24] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:06:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:06:24] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:06:24 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:06:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:06:24] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:07:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:07:24] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:07:24 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:07:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:07:24] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:08:04 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:08:04] "GET / HTTP/1.1" 304 -
+2026-11-26 21:08:04 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:08:04] "GET /style.css HTTP/1.1" 304 -
+2026-11-26 21:08:04 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:08:04] "GET /logo_head.png HTTP/1.1" 304 -
+2026-11-26 21:08:04 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:08:04] "GET /app.js HTTP/1.1" 200 -
+2026-11-26 21:08:04 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:08:04] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:08:04 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:08:04] "GET /favicon.ico HTTP/1.1" 304 -
+2026-11-26 21:08:04 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:08:04] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:08:04 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:08:04 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:08:04] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:09:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:09:05] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:09:05 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:09:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:09:05] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:10:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:10:05] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:10:05 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:10:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:10:05] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:11:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:11:05] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:11:05 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:11:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:11:05] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:12:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:12:05] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:12:05 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:12:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:12:05] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:13:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:13:05] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:13:05 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:13:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:13:05] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:14:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:14:05] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:14:05 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:14:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:14:05] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:15:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:15:05] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:15:05 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:15:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:15:05] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:16:06 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:16:06] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:16:06 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:16:06 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:16:06] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:17:07 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:17:07] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:17:07 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:17:07 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:17:07] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:18:07 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:07] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:18:07 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:18:07 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:07] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:18:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:10] "GET / HTTP/1.1" 304 -
+2026-11-26 21:18:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:10] "GET /style.css HTTP/1.1" 304 -
+2026-11-26 21:18:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:10] "GET /app.js HTTP/1.1" 200 -
+2026-11-26 21:18:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:10] "GET /logo_head.png HTTP/1.1" 304 -
+2026-11-26 21:18:10 INFO citysaathi: GET /api/config -> HTTP 404
+2026-11-26 21:18:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:10] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:18:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:10] "GET /api/config HTTP/1.1" 404 -
+2026-11-26 21:18:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:10] "GET /favicon.ico HTTP/1.1" 304 -
+2026-11-26 21:18:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:10] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:18:10 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:18:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:10] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:18:17 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:17] "GET /style.css HTTP/1.1" 304 -
+2026-11-26 21:18:17 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:18:17 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:17] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+2026-11-26 21:18:50 INFO citysaathi: GET /api/config -> HTTP 404
+2026-11-26 21:18:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:18:50] "GET /api/config HTTP/1.1" 404 -
+2026-11-26 21:19:07 INFO citysaathi: GET /api/config -> HTTP 404
+2026-11-26 21:19:07 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:07] "GET /api/config HTTP/1.1" 404 -
+2026-11-26 21:19:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:10] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:19:10 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:19:10 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:10] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:19:44 INFO citysaathi: Database initialised at C:\Users\himan\Projects\CitySaathi\citysaathi.db
+2026-11-26 21:19:44 INFO citysaathi: CitySaathi starting — DB=C:\Users\himan\Projects\CitySaathi\citysaathi.db UPLOADS=C:\Users\himan\Projects\CitySaathi\uploads
+2026-11-26 21:19:44 INFO werkzeug: WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+2026-11-26 21:19:44 INFO werkzeug: Press CTRL+C to quit
+2026-11-26 21:19:49 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:49] "GET / HTTP/1.1" 304 -
+2026-11-26 21:19:49 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:49] "GET /style.css HTTP/1.1" 304 -
+2026-11-26 21:19:49 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:49] "GET /logo_head.png HTTP/1.1" 304 -
+2026-11-26 21:19:49 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:49] "GET /app.js HTTP/1.1" 304 -
+2026-11-26 21:19:49 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:19:49 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:49] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+2026-11-26 21:19:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:50] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:19:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:50] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:19:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:50] "GET /favicon.ico HTTP/1.1" 304 -
+2026-11-26 21:19:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:50] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:19:50 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:19:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:19:50] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:20:05 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:20:05 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:20:05] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:20:12 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:20:12] "GET /style.css HTTP/1.1" 304 -
+2026-11-26 21:20:12 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:20:12 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:20:12] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+2026-11-26 21:20:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:20:50] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:20:50 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:20:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:20:50] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:21:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:21:50] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:21:50 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:21:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:21:50] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:22:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:22:50] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:22:50 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:22:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:22:50] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:23:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:23:50] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:23:50 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:23:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:23:50] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:24:50 INFO citysaathi: Database initialised at C:\Users\himan\Projects\CitySaathi\citysaathi.db
+2026-11-26 21:24:50 INFO citysaathi: CitySaathi starting — DB=C:\Users\himan\Projects\CitySaathi\citysaathi.db UPLOADS=C:\Users\himan\Projects\CitySaathi\uploads
+2026-11-26 21:24:50 INFO werkzeug: WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+2026-11-26 21:24:50 INFO werkzeug: Press CTRL+C to quit
+2026-11-26 21:24:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:24:50] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:24:50 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:24:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:24:50] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:25:17 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:25:17] "GET / HTTP/1.1" 304 -
+2026-11-26 21:25:17 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:25:17] "GET /style.css HTTP/1.1" 304 -
+2026-11-26 21:25:17 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:25:17] "GET /logo_head.png HTTP/1.1" 304 -
+2026-11-26 21:25:17 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:25:17] "GET /app.js HTTP/1.1" 304 -
+2026-11-26 21:25:17 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:25:17] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:25:17 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:25:17] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:25:17 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:25:17] "GET /favicon.ico HTTP/1.1" 304 -
+2026-11-26 21:25:18 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:25:18] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:25:18 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:25:18 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:25:18] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:34:50 INFO citysaathi: Database initialised at C:\Users\himan\Projects\CitySaathi\citysaathi.db
+2026-11-26 21:34:50 INFO citysaathi: CitySaathi starting — DB=C:\Users\himan\Projects\CitySaathi\citysaathi.db UPLOADS=C:\Users\himan\Projects\CitySaathi\uploads
+2026-11-26 21:34:50 INFO werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-11-26 21:34:50 INFO werkzeug: [33mPress CTRL+C to quit[0m
+2026-11-26 21:34:59 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:34:59] "[36mGET / HTTP/1.1[0m" 304 -
+2026-11-26 21:34:59 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:34:59] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2026-11-26 21:34:59 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:34:59] "[36mGET /logo_head.png HTTP/1.1[0m" 304 -
+2026-11-26 21:34:59 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:34:59] "[36mGET /app.js HTTP/1.1[0m" 304 -
+2026-11-26 21:35:00 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:35:00] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:35:00 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:35:00] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:35:00 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:35:00] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2026-11-26 21:35:00 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:35:00] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:35:00 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:35:00 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:35:00] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:36:45 INFO citysaathi: Database initialised at C:\Users\himan\Projects\CitySaathi\citysaathi.db
+2026-11-26 21:36:45 INFO citysaathi: CitySaathi starting — DB=C:\Users\himan\Projects\CitySaathi\citysaathi.db UPLOADS=C:\Users\himan\Projects\CitySaathi\uploads
+2026-11-26 21:36:45 INFO werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-11-26 21:36:45 INFO werkzeug: [33mPress CTRL+C to quit[0m
+2026-11-26 21:36:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:36:50] "[36mGET / HTTP/1.1[0m" 304 -
+2026-11-26 21:36:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:36:50] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2026-11-26 21:36:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:36:50] "GET /app.js HTTP/1.1" 200 -
+2026-11-26 21:36:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:36:50] "[36mGET /logo_head.png HTTP/1.1[0m" 304 -
+2026-11-26 21:36:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:36:50] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:36:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:36:50] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:36:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:36:50] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2026-11-26 21:36:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:36:50] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:36:51 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:36:51 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:36:51] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:37:26 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:26] "[36mGET / HTTP/1.1[0m" 304 -
+2026-11-26 21:37:26 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:26] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2026-11-26 21:37:26 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:26] "[36mGET /logo_head.png HTTP/1.1[0m" 304 -
+2026-11-26 21:37:26 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:26] "GET /app.js HTTP/1.1" 200 -
+2026-11-26 21:37:26 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:26] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:37:26 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:26] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:37:26 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:26] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2026-11-26 21:37:26 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:26] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:37:26 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:37:26 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:26] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:37:35 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:35] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2026-11-26 21:37:36 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:37:36 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:36] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "[36mGET / HTTP/1.1[0m" 304 -
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "[36mGET /logo_head.png HTTP/1.1[0m" 304 -
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "[36mGET /app.js HTTP/1.1[0m" 304 -
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:37:54 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-11-26 21:37:54 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:37:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:37:54] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:38:37 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:37] "[36mGET / HTTP/1.1[0m" 304 -
+2026-11-26 21:38:37 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:37] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2026-11-26 21:38:37 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:37] "[36mGET /logo_head.png HTTP/1.1[0m" 304 -
+2026-11-26 21:38:37 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:37] "GET /app.js HTTP/1.1" 200 -
+2026-11-26 21:38:38 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:38:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:38] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-11-26 21:38:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:38] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:38:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:38] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:38:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:38] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2026-11-26 21:38:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:38] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:38:38 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:38:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:38:38] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:39:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:39:38] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:39:38 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:39:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:39:38] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:40:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:38] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:40:38 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:40:38 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:38] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:40:43 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:43] "[36mGET / HTTP/1.1[0m" 304 -
+2026-11-26 21:40:43 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:43] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2026-11-26 21:40:43 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:43] "[36mGET /logo_head.png HTTP/1.1[0m" 304 -
+2026-11-26 21:40:43 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:43] "GET /app.js HTTP/1.1" 200 -
+2026-11-26 21:40:43 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:40:43 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:43] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-11-26 21:40:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:44] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:40:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:44] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:40:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:44] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2026-11-26 21:40:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:44] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:40:44 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:40:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:40:44] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:41:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:41:44] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:41:44 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:41:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:41:44] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:42:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:42:44] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:42:44 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:42:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:42:44] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:43:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:43:44] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:43:44 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:43:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:43:44] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:44:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:44:44] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:44:44 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:44:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:44:44] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:45:45 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:45:45] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:45:50 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:45:50 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:45:50] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:46:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:46:44] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:46:44 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:46:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:46:44] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:47:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:47:44] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:47:44 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:47:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:47:44] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:48:45 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:48:45] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:48:45 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:48:45 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:48:45] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:49:46 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:49:46] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:49:46 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:49:46 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:49:46] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:50:47 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:50:47] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:50:47 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:50:47 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:50:47] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:51:24 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:51:24 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:51:24] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-11-26 21:51:44 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:51:44] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:52:45 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:52:45] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:53:46 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:53:46] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:54:47 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:54:47] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:55:24 INFO citysaathi: Database initialised at C:\Users\himan\Projects\CitySaathi\citysaathi.db
+2026-11-26 21:55:24 INFO citysaathi: CitySaathi starting — DB=C:\Users\himan\Projects\CitySaathi\citysaathi.db UPLOADS=C:\Users\himan\Projects\CitySaathi\uploads
+2026-11-26 21:55:24 INFO werkzeug: WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+2026-11-26 21:55:24 INFO werkzeug: Press CTRL+C to quit
+2026-11-26 21:55:48 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:48] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:55:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:54] "[36mGET / HTTP/1.1[0m" 304 -
+2026-11-26 21:55:54 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:54] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2026-11-26 21:55:55 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:55] "[36mGET /logo_head.png HTTP/1.1[0m" 304 -
+2026-11-26 21:55:55 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:55] "GET /app.js HTTP/1.1" 200 -
+2026-11-26 21:55:55 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:55:55 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:55] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-11-26 21:55:55 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:55] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:55:55 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:55] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:55:55 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:55] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2026-11-26 21:55:55 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:55] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:55:57 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:55:57 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:57] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:55:57 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:55:57 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:55:57] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-11-26 21:56:55 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:56:55] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:56:55 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:56:55 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:56:55] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET / HTTP/1.1" 304 -
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET /style.css HTTP/1.1" 304 -
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET /app.js HTTP/1.1" 304 -
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET /logo_head.png HTTP/1.1" 304 -
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET /api/config HTTP/1.1" 200 -
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET /favicon.ico HTTP/1.1" 304 -
+2026-11-26 21:57:08 INFO citysaathi: GET /.well-known/appspecific/com.chrome.devtools.json -> HTTP 404
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:57:08 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:57:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:57:08] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-26 21:58:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:58:08] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-26 21:58:08 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-26 21:58:08 INFO werkzeug: 127.0.0.1 - - [26/Nov/2026 21:58:08] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -
+2026-11-27 08:08:54 INFO citysaathi: Database initialised at C:\Users\himan\Projects\CitySaathi\citysaathi.db
+2026-11-27 08:08:54 INFO citysaathi: CitySaathi starting — DB=C:\Users\himan\Projects\CitySaathi\citysaathi.db UPLOADS=C:\Users\himan\Projects\CitySaathi\uploads
+2026-11-27 08:08:55 INFO werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-11-27 08:08:55 INFO werkzeug: [33mPress CTRL+C to quit[0m
+2026-11-27 08:09:53 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:53] "[36mGET / HTTP/1.1[0m" 304 -
+2026-11-27 08:09:53 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:53] "GET /style.css HTTP/1.1" 200 -
+2026-11-27 08:09:53 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:53] "[36mGET /logo_head.png HTTP/1.1[0m" 304 -
+2026-11-27 08:09:53 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:53] "[36mGET /app.js HTTP/1.1[0m" 304 -
+2026-11-27 08:09:53 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:53] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-27 08:09:53 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:53] "GET /api/config HTTP/1.1" 200 -
+2026-11-27 08:09:53 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:53] "[36mGET /logo1.png HTTP/1.1[0m" 304 -
+2026-11-27 08:09:54 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:54] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-27 08:09:54 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:54] "[36mGET /uploads/56aa4fb21b3e7555b18f6273.png HTTP/1.1[0m" 304 -
+2026-11-27 08:09:54 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:09:54] "[36mGET /uploads/891c32d1f4f7cda26a8dbcf4.png HTTP/1.1[0m" 304 -
+2026-11-27 08:10:54 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 08:10:54] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-27 09:42:58 INFO citysaathi: Database initialised at C:\Users\himan\Projects\CitySaathi\citysaathi.db
+2026-11-27 09:42:58 INFO citysaathi: CitySaathi starting — DB=C:\Users\himan\Projects\CitySaathi\citysaathi.db UPLOADS=C:\Users\himan\Projects\CitySaathi\uploads
+2026-11-27 09:42:58 INFO werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-11-27 09:42:58 INFO werkzeug: [33mPress CTRL+C to quit[0m
+2026-11-27 09:43:11 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:11] "[36mGET / HTTP/1.1[0m" 304 -
+2026-11-27 09:43:11 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:11] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2026-11-27 09:43:11 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:11] "[36mGET /app.js HTTP/1.1[0m" 304 -
+2026-11-27 09:43:11 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:11] "[36mGET /logo_head.png HTTP/1.1[0m" 304 -
+2026-11-27 09:43:11 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:11] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-27 09:43:11 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:11] "GET /api/config HTTP/1.1" 200 -
+2026-11-27 09:43:11 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:11] "[36mGET /logo1.png HTTP/1.1[0m" 304 -
+2026-11-27 09:43:11 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:11] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-27 09:43:13 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:13] "[36mGET /uploads/9caddfde0b50cfa66a5bdf7a.png HTTP/1.1[0m" 304 -
+2026-11-27 09:43:13 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:13] "[36mGET /uploads/91a4d53906cfab34b4ab52ed.png HTTP/1.1[0m" 304 -
+2026-11-27 09:43:13 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-27 09:43:13 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:13] "[33mGET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1[0m" 404 -
+2026-11-27 09:43:17 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:43:17] "[36mGET /logo1.png HTTP/1.1[0m" 304 -
+2026-11-27 09:44:11 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:44:11] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-27 09:49:16 INFO citysaathi: Database initialised at C:\Users\himan\Projects\CitySaathi\citysaathi.db
+2026-11-27 09:49:16 INFO citysaathi: CitySaathi starting — DB=C:\Users\himan\Projects\CitySaathi\citysaathi.db UPLOADS=C:\Users\himan\Projects\CitySaathi\uploads
+2026-11-27 09:49:16 INFO werkzeug: WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+2026-11-27 09:49:16 INFO werkzeug: Press CTRL+C to quit
+2026-11-27 09:49:25 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:49:25] "GET / HTTP/1.1" 304 -
+2026-11-27 09:49:25 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:49:25] "GET /style.css HTTP/1.1" 304 -
+2026-11-27 09:49:25 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:49:25] "GET /logo_head.png HTTP/1.1" 304 -
+2026-11-27 09:49:25 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:49:25] "GET /app.js HTTP/1.1" 304 -
+2026-11-27 09:49:25 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:49:25] "GET /api/auth/me HTTP/1.1" 200 -
+2026-11-27 09:49:25 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:49:25] "GET /api/config HTTP/1.1" 200 -
+2026-11-27 09:49:25 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:49:25] "GET /favicon.ico HTTP/1.1" 304 -
+2026-11-27 09:49:25 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:49:25] "GET /api/complaints HTTP/1.1" 200 -
+2026-11-27 09:49:26 INFO citysaathi: GET /uploads/46c1f4e0293adc52cb369e58.png -> HTTP 404
+2026-11-27 09:49:26 INFO werkzeug: 127.0.0.1 - - [27/Nov/2026 09:49:26] "GET /uploads/46c1f4e0293adc52cb369e58.png HTTP/1.1" 404 -

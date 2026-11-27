@@ -328,6 +328,15 @@ def index():
     return app.send_static_file("index.html")
 
 
+@app.get("/api/config")
+def public_config():
+    """Expose non-secret public config values to the frontend."""
+    
+    return jsonify(
+        carto_api_key=os.environ.get("CARTO_API", "")
+    )
+
+
 @app.get("/uploads/<path:name>")
 def uploads(name):
     return send_from_directory(UPLOADS, name, max_age=86400)

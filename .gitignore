@@ -5,3 +5,4 @@ uploads/
 .secret_key
 __pycache__/
 venv/
+
