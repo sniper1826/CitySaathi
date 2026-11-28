@@ -1,12 +1,19 @@
 # CitySaathi 
 
-Report it. Track it. Fix it. This folder holds the API, the database layer and the web front end.
+Report it. Track it. Fix it.
+
+CitySaathi is your neighbourhood companion for civic problems. Report sewage, drainage, water and road issues with a photo and a location, then follow each complaint until it is fixed.
+
+
 
 ## Run it locally
 ```bash
 python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+source venv/bin/activate          
+pip install -r requirements.txt 
+
+Get a CARTO api key. 
+Set the CARTO API KEY as an environment variable as CARTO_API = your_api_key.
 
 flask --app app init-db                    # creates citysaathi.db and uploads/
 flask --app app create-staff --role admin  # prompts for username and password (10+ chars)
@@ -28,11 +35,9 @@ export SECRET_KEY="$(python -c 'import secrets;print(secrets.token_hex(32))')"
 export COOKIE_SECURE=1                      # only behind HTTPS
 gunicorn -w 2 -b 0.0.0.0:8000 app:app       # Windows: waitress-serve --port=8000 app:app
 ```
-Put it behind HTTPS (nginx, Caddy or your host's proxy). Environment variables: `SECRET_KEY`, `DB_PATH`, `UPLOAD_DIR`, `COOKIE_SECURE`.
+Put it behind HTTPS (nginx, Caddy or your host's proxy). Environment variables: `SECRET_KEY`, `DB_PATH`, `UPLOAD_DIR`, `COOKIE_SECURE`, `CARTO_API` .
 
-## What is in the box
-| File | Purpose |
-|---|---|
+## Files
 | `app.py` | API, SQLite schema, staff login, CLI commands |
 | `static/index.html` | The CitySaathi front end, talking to the API |
 | `citysaathi.db` | SQLite database (created on first run) |
